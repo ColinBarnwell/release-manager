@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from views import (
-    ProductListView,
+    IndexView,
     ProductDetailView,
     PackageDetailView
 )
@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^djadmn/', include(admin.site.urls)),
 
     # Release Manager
-    url(r'^$', ProductListView.as_view(), name='product_list'),
+    url(r'^$', IndexView.as_view(), name='index'),
     url(r'^product/(?P<pk>[-\d]+)$', ProductDetailView.as_view(), name='product_detail'),
 
     url(r'^package/(?P<pk>[-\d]+)$', PackageDetailView.as_view(), name='package_detail')

@@ -131,5 +131,5 @@ class Build(models.Model):
 
     class Meta:
         app_label = 'relman'
-        ordering = 'build_number',
+        ordering = '-build_number',
         unique_together = ('release', 'build_number'),

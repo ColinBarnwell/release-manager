@@ -3,11 +3,11 @@
 
 {% block content %}
 
-    <div class="panel-group" id="products">
+    <div class="jumbotron">
+        <h1>{{ product.name }}</h1>
+    </div>
 
-        <div class="jumbotron">
-            <h1>{{ product.name }}</h1>
-        </div>
+    <div class="panel-group" id="products">
 
         {% with current_release=product.current_release next_release=product.next_release %}
             <div class="panel panel-default">
@@ -68,6 +68,8 @@
                                         label-danger
                                     {% elif dependency.is_released %}
                                         label-success
+                                    {% elif dependency.target_date > next_release.target_date %}
+                                        label-danger
                                     {% else %}
                                         label-warning
                                     {% endif %}
@@ -112,7 +114,10 @@
                                 </div>
                                 <div class="col-xs-6">
                                     {% for build in builds %}
-                                    <div id="promotion-panel-{{ forloop.counter}}" class="panel-collapse collapse">
+                                    <div id="promotion-panel-{{ forloop.counter}}" class="panel-collapse collapse{% if forloop.first %} in{% endif %}">
+                                        <div class="panel-heading">
+                                            {{ build }}
+                                        </div>
                                         <div class="panel-body">
                                             <table class="table table-striped">
                                                 <th>{% trans "Environment" %}</th>

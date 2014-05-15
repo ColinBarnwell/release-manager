@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+    <div class="jumbotron">
+        <h1>{% trans "Products" %}</h1>
+    </div>
+
+    <div class="panel-group">
+
+        {% for product in products %}
+            {% with current_release=product.current_release next_release=product.next_release %}
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <h5><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h5>
+                            </div>
+                            <div class="col-xs-4">
+                                 {% if current_release %}
+                                    <b>{% trans "Current release" %}:</b>
+                                    {{ current_release.version_number }}
+                                    ({{ current_release.target_date }})
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-4">
+                                {% if next_release %}
+                                    <b>{% trans "Next release" %}:</b>
+                                    {{ next_release.version_number }}
+                                    ({{ next_release.target_date }})
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endwith %}
+        {% endfor %}
+
+    </div>
+
+    <div class="jumbotron">
+        <h1>{% trans "Packages" %}</h1>
+    </div>
+
+    <div class="panel-group">
+
+        {% for package in packages %}
+            {% with current_version=package.current_version next_version=product.next_version %}
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <h5><a href="{{ package.get_absolute_url }}">{{ package.name }}</a></h5>
+                            </div>
+                            <div class="col-xs-4">
+                                 {% if current_version %}
+                                    <b>{% trans "Current version" %}:</b>
+                                    {{ current_version.version_number }}
+                                    ({{ current_version.target_date }})
+                                {% endif %}
+                            </div>
+                            <div class="col-xs-4">
+                                {% if next_version %}
+                                    <b>{% trans "Next version" %}:</b>
+                                    {{ next_version.version_number }}
+                                    ({{ next_version.target_date }})
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endwith %}
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}
