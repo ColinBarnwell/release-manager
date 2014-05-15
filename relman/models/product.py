@@ -20,23 +20,33 @@ class Product(models.Model):
 
     def current_release(self):
         releases = self.releases.filter(
-            status=ProductRelease.STATUS_CHOCIES.released
+            status=ProductRelease.STATUS_CHOICES.released
         )[:1]
         if releases:
-            return releases[0].version_number()
+            return releases[0]
+
+    def current_release_version(self):
+        current_release = self.current_release()
+        if current_release:
+            return current_release.version_number()
         return ''
 
     def next_release(self):
         releases = self.releases.filter(
             status__in=(
-                ProductRelease.STATUS_CHOCIES.proposed,
-                ProductRelease.STATUS_CHOCIES.in_progress,
+                ProductRelease.STATUS_CHOICES.proposed,
+                ProductRelease.STATUS_CHOICES.in_progress,
             )
         ).order_by('target_date')[:1]
         if releases:
+            return releases[0]
+
+    def next_release_version(self):
+        next_release = self.next_release()
+        if next_release:
             return '%s (%s)' % (
-                releases[0].version_number(),
-                releases[0].get_status_display()
+                next_release.version_number(),
+                next_release.get_status_display()
             )
         return ''
 
@@ -85,7 +95,7 @@ class Build(models.Model):
     is a successful release. An unsuccessful build should be superceded by a
     new build, once code or environment changes have been made.
     """
-    BUILD_STATUS_CHOCIES = Choices(
+    BUILD_STATUS_CHOICES = Choices(
         ('scheduled', _("Scheduled")),
         ('in_progress', _("In progress")),
         ('failed', _("Failed")),
@@ -103,7 +113,7 @@ class Build(models.Model):
     status = models.CharField(
         _("Status"),
         max_length=16,
-        choices=BUILD_STATUS_CHOCIES
+        choices=BUILD_STATUS_CHOICES
     )
 
     def __unicode__(self):

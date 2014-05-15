@@ -6,7 +6,7 @@ from model_utils import Choices
 
 class SoftwareVersion(models.Model):
 
-    STATUS_CHOCIES = Choices(
+    STATUS_CHOICES = Choices(
         ('proposed', _("Proposed")),
         ('in_progress', _("In progress")),
         ('cancelled', _("Cancelled")),
@@ -16,7 +16,7 @@ class SoftwareVersion(models.Model):
     status = models.CharField(
         _("Status"),
         max_length=16,
-        choices=STATUS_CHOCIES
+        choices=STATUS_CHOICES
     )
 
     major_version = models.PositiveIntegerField(_("Major version"), default=0)
@@ -27,6 +27,14 @@ class SoftwareVersion(models.Model):
     target_date = models.DateField()
 
     notes = models.TextField(_("Notes"), blank=True)
+
+    @property
+    def is_cancelled(self):
+        return self.status == self.STATUS_CHOICES.cancelled
+
+    @property
+    def is_released(self):
+        return self.status == self.STATUS_CHOICES.released
 
     def version_number(self):
         return u"{major}.{minor}.{patch}{alpha_sep}{alpha}".format(

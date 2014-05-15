@@ -18,25 +18,20 @@ class Package(models.Model):
 
     def current_version(self):
         versions = self.versions.filter(
-            status=PackageVersion.STATUS_CHOCIES.released
+            status=PackageVersion.STATUS_CHOICES.released
         )[:1]
         if versions:
-            return versions[0].version_number()
-        return ''
+            return versions[0]
 
     def next_version(self):
         versions = self.versions.filter(
             status__in=(
-                PackageVersion.STATUS_CHOCIES.proposed,
-                PackageVersion.STATUS_CHOCIES.in_progress,
+                PackageVersion.STATUS_CHOICES.proposed,
+                PackageVersion.STATUS_CHOICES.in_progress,
             )
         ).order_by('target_date')[:1]
         if versions:
-            return '%s (%s)' % (
-                versions[0].version_number(),
-                versions[0].get_status_display()
-            )
-        return ''
+            return versions[0]
 
     def __unicode__(self):
         return self.name

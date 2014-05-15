@@ -3,6 +3,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
+from views import ProductListView
+
 
 admin.autodiscover()
 
@@ -15,6 +17,9 @@ urlpatterns = [
     # Admin
     url(r'^djadmn/doc/', include('django.contrib.admindocs.urls')),
     url(r'^djadmn/', include(admin.site.urls)),
+
+    # Release Manager
+    url(r'^$', ProductListView.as_view(), name='product_list')
 
 ]
 

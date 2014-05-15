@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+
+    <div class="panel-group" id="products">
+
+        {% for product in object_list %}
+            {% with current_release=product.current_release next_release=product.next_release %}
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <h5><a data-toggle="collapse" data-parent="#products" href="#product-panel-{{ forloop.counter }}">{{ product.name }}</a></h5>
+                            </div>
+                            <div class="col-xs-3">
+                                 {{ current_release.version_number }}
+                            </div>
+                            <div class="col-xs-6">
+                                {% if next_release %}
+                                    <b>{% trans "Next release" %}:</b>
+                                    {{ product.next_release.version_number }}
+                                    ({{ product.next_release.target_date }})
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="product-panel-{{ forloop.counter }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <table class="table table-striped">
+                                        <th>{% trans "Version" %}</th>
+                                        <th>{% trans "Date" %}</th>
+                                        <th>{% trans "Status" %}</th>
+                                        {% for release in product.releases.all %}
+                                            <tr>
+                                                <td>
+                                                    {% if release == current_release %}
+                                                        <b>{{ release.version_number }}</b>
+                                                    {% else %}
+                                                        {{ release.version_number }}
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ release.target_date }}</td>
+                                                <td>{{ release.get_status_display }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                                <div class="col-xs-6">
+                                    <p>{% trans "Notes" %}:</p>
+                                    <div class="well well-sm">
+                                        {{ next_release.notes|linebreaks }}
+                                    </div>
+                                    <p>{% trans "Dependencies" %}:</p>
+                                    <div class="well well-sm">
+                                        {% for dependency in next_release.dependencies.all %}
+                                            <span class="label
+                                            {% if dependency.is_cancelled %}
+                                                label-danger
+                                            {% elif dependency.is_released %}
+                                                label-success
+                                            {% else %}
+                                                label-warning
+                                            {% endif %}
+                                            ">{{ dependency }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endwith %}
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}
