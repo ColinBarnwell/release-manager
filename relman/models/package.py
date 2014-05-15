@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy as _p
 
@@ -32,6 +33,9 @@ class Package(models.Model):
         ).order_by('target_date')[:1]
         if versions:
             return versions[0]
+
+    def get_absolute_url(self):
+        return reverse('package_detail', kwargs={'pk': self.pk})
 
     def __unicode__(self):
         return self.name

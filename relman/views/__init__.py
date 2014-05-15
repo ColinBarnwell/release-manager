@@ -1,1 +1,2 @@
-from product import ProductListView
+from product import ProductListView, ProductDetailView
+from package import PackageDetailView

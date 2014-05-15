@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy as _p
 
@@ -49,6 +50,9 @@ class Product(models.Model):
                 next_release.get_status_display()
             )
         return ''
+
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={'pk': self.pk})
 
     def __unicode__(self):
         return self.name
@@ -104,7 +108,8 @@ class Build(models.Model):
 
     release = models.ForeignKey(
         ProductRelease,
-        verbose_name=(_("Release"))
+        verbose_name=(_("Release")),
+        related_name='builds'
     )
 
     build_number = models.PositiveIntegerField(default=1)

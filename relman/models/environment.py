@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy as _p
 
+from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
 
@@ -37,14 +38,28 @@ class Promotion(TimeStampedModel):
     """
     A promotion is a build within a an environment.
     """
+    STATUS_CHOICES = Choices(
+        ('awaiting', _("Awaiting")),
+        ('failure', _("Failure")),
+        ('success', _("Success")),
+    )
+
     build = models.ForeignKey(
         'relman.Build',
         verbose_name=(_("Build")),
+        related_name='promotions',
         editable=False
     )
     environment = models.ForeignKey(
         'Environment',
         verbose_name=(_("Environment")),
+    )
+
+    status = models.CharField(
+        _("Status"),
+        max_length=16,
+        choices=STATUS_CHOICES,
+        default=STATUS_CHOICES.awaiting
     )
 
     notes = models.TextField(_("Notes"), blank=True)
