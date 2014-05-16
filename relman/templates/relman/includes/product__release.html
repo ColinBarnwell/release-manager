@@ -1,0 +1,54 @@
+{% load i18n %}
+
+<div class="col-xs-12">
+    <h2>{{ release.version_number }}</h2>
+</div>
+
+<div class="col-xs-4">
+    {{ release.notes|linebreaks }}
+    <div class="well well-sm">
+        {% for dependency in release.dependencies.all %}
+            <a href="{{ dependency.get_absolute_url }}" class="label
+            {% if dependency.is_cancelled %}
+                label-danger
+            {% elif dependency.is_released %}
+                label-success
+            {% elif dependency.target_date > release.target_date %}
+                label-danger
+            {% else %}
+                label-warning
+            {% endif %}
+            " target="_blank">{{ dependency }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="col-xs-4">
+    <table class="table table-striped table-hover">
+        <th>{% trans "Build Number" %}</th>
+        <th>{% trans "Status" %}</th>
+        {% for build in release.builds.all %}
+            <tr data-ajax-url="{{ build.get_ajax_url }}" data-ajax-target="#build-details">
+                <td>{{ release.version_number }}.{{ build.code }}</td>
+                <td>
+                    <span class="label
+                        {% if build.is_in_progress %}
+                            label-warning
+                        {% elif build.is_successful %}
+                            label-success
+                        {% elif build.is_unsuccessful %}
+                            label-danger
+                        {% else %}
+                            label-info
+                        {% endif %}">
+                        {{ build.get_status_display }}
+                    </span>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="col-xs-4" id="build-details">
+</div>
+

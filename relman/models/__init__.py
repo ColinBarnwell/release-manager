@@ -9,6 +9,7 @@ __all__ = [
     'Build',
     'Package',
     'PackageVersion',
+    'Change',
     'Environment',
     'Promotion',
 ]

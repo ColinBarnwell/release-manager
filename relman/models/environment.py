@@ -15,23 +15,14 @@ class Environment(models.Model):
         _p("object name", "Name"),
         max_length=255
     )
-    product = models.ForeignKey(
-        'Product',
-        verbose_name=(_("Product"))
-    )
-    promotes_to = models.ForeignKey(
-        'Environment',
-        verbose_name=(_("Promotes to")),
-        null=True,
-        blank=True
-    )
+    display_order = models.PositiveIntegerField(_("Display order"), default=0)
 
     def __unicode__(self):
-        return u'%s: %s' % (self.product, self.name)
+        return self.name
 
     class Meta:
         app_label = 'relman'
-        unique_together = ('product', 'name'),
+        ordering = ('display_order', 'name')
 
 
 class Promotion(TimeStampedModel):
@@ -63,6 +54,14 @@ class Promotion(TimeStampedModel):
     )
 
     notes = models.TextField(_("Notes"), blank=True)
+
+    @property
+    def is_successful(self):
+        return self.status == self.STATUS_CHOICES.success
+
+    @property
+    def is_unsuccessful(self):
+        return self.status == self.STATUS_CHOICES.failure
 
     def __unicode__(self):
         return u'%s [%s]' % (self.build, self.environment)

@@ -1,3 +1,3 @@
 from index import IndexView
-from product import ProductDetailView
-from package import PackageDetailView
+from product import ProductDetailView, ReleaseDetailView, BuildDetailView
+from package import PackageDetailView, VersionDetailView

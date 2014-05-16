@@ -11,6 +11,7 @@ class SoftwareVersion(models.Model):
         ('in_progress', _("In progress")),
         ('cancelled', _("Cancelled")),
         ('released', _("Released")),
+        ('deprecated', _("Deprecated")),
     )
 
     status = models.CharField(
@@ -29,8 +30,19 @@ class SoftwareVersion(models.Model):
     notes = models.TextField(_("Notes"), blank=True)
 
     @property
-    def is_cancelled(self):
-        return self.status == self.STATUS_CHOICES.cancelled
+    def is_obsolete(self):
+        return self.status in (
+            self.STATUS_CHOICES.cancelled,
+            self.STATUS_CHOICES.deprecated
+        )
+
+    @property
+    def is_proposed(self):
+        return self.status == self.STATUS_CHOICES.proposed
+
+    @property
+    def is_in_progress(self):
+        return self.status == self.STATUS_CHOICES.in_progress
 
     @property
     def is_released(self):
@@ -54,4 +66,4 @@ class SoftwareVersion(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('-major_version', '-minor_version', '-patch_version', 'alpha_version')
+        ordering = ('-major_version', '-minor_version', '-patch_version', '-target_date')

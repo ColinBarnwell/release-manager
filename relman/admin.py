@@ -6,6 +6,7 @@ from models import (
     Build,
     Package,
     PackageVersion,
+    Change,
     Environment,
     Promotion
 )
@@ -26,6 +27,10 @@ class PackageVersionInline(admin.StackedInline):
     extra = 1
 
 
+class ChangeInline(admin.StackedInline):
+    model = Change
+
+
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'current_release', 'next_release')
 
@@ -43,8 +48,13 @@ class PackageAdmin(admin.ModelAdmin):
     inlines = PackageVersionInline,
 
 
+class PackageVersionAdmin(admin.ModelAdmin):
+    inlines = ChangeInline,
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductRelease, ProductReleaseAdmin)
 admin.site.register(Build, BuildAdmin)
 admin.site.register(Package, PackageAdmin)
+admin.site.register(PackageVersion, PackageVersionAdmin)
 admin.site.register(Environment)

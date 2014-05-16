@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<table class="table table-striped table-hover">
+    <th>{% trans "Environment" %}</th>
+    <th>{% trans "Status" %}</th>
+    {% for promotion in build.promotions.all %}
+        <tr>
+            <td>{{ promotion.environment }}</td>
+            <td>
+                <span class="label
+                    {% if promotion.is_successful %}
+                        label-success
+                    {% elif promotion.is_unsuccessful %}
+                        label-danger
+                    {% else %}
+                        label-info
+                    {% endif %}">
+                    {{ promotion.get_status_display }}
+                </span>
+            </td>
+        </tr>
+    {% endfor %}
+</table>

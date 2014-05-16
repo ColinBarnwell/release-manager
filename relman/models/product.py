@@ -70,7 +70,6 @@ class ProductRelease(SoftwareVersion):
         Product,
         verbose_name=(_("Product")),
         related_name='releases',
-        editable=False
     )
     previous_release = models.ForeignKey(
         'ProductRelease',
@@ -81,10 +80,16 @@ class ProductRelease(SoftwareVersion):
     dependencies = models.ManyToManyField(
         'PackageVersion',
         verbose_name=(_("Dependencies")),
-        related_name='depended_by',
+        related_name='dependants',
         null=True,
         blank=True
     )
+
+    def get_absolute_url(self):
+        return u"%s?v=%s" % (self.product.get_absolute_url(), self.version_number())
+
+    def get_ajax_url(self):
+        return reverse('release_detail', kwargs={'pk': self.pk})
 
     def __unicode__(self):
         return super(ProductRelease, self).__unicode__(name=self.product.name)
@@ -99,7 +104,7 @@ class Build(models.Model):
     is a successful release. An unsuccessful build should be superceded by a
     new build, once code or environment changes have been made.
     """
-    BUILD_STATUS_CHOICES = Choices(
+    STATUS_CHOICES = Choices(
         ('scheduled', _("Scheduled")),
         ('in_progress', _("In progress")),
         ('failed', _("Failed")),
@@ -118,18 +123,35 @@ class Build(models.Model):
     status = models.CharField(
         _("Status"),
         max_length=16,
-        choices=BUILD_STATUS_CHOICES
+        choices=STATUS_CHOICES
     )
 
+    @property
+    def is_in_progress(self):
+        return self.status == self.STATUS_CHOICES.in_progress
+
+    @property
+    def is_successful(self):
+        return self.status == self.STATUS_CHOICES.succesful
+
+    @property
+    def is_unsuccessful(self):
+        return self.status == self.STATUS_CHOICES.failed
+
+    @property
+    def code(self):
+        return self.code_name or self.build_number
+
+    def get_ajax_url(self):
+        return reverse('build_detail', kwargs={'pk': self.pk})
+
     def __unicode__(self):
-        return u"{release} > {build_number}{code_sep}{code}".format(
+        return u"{release}.{code}".format(
             release=self.release,
-            build_number=self.build_number,
-            code_sep='-' if self.code_name else '',
-            code=self.code_name
+            code=self.code
         )
 
     class Meta:
         app_label = 'relman'
-        ordering = '-build_number',
+        ordering = 'build_number',
         unique_together = ('release', 'build_number'),

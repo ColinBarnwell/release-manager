@@ -6,7 +6,10 @@ from django.views.generic import TemplateView
 from views import (
     IndexView,
     ProductDetailView,
-    PackageDetailView
+    ReleaseDetailView,
+    BuildDetailView,
+    PackageDetailView,
+    VersionDetailView
 )
 
 
@@ -25,9 +28,10 @@ urlpatterns = [
     # Release Manager
     url(r'^$', IndexView.as_view(), name='index'),
     url(r'^product/(?P<pk>[-\d]+)$', ProductDetailView.as_view(), name='product_detail'),
-
-    url(r'^package/(?P<pk>[-\d]+)$', PackageDetailView.as_view(), name='package_detail')
-
+    url(r'^release/(?P<pk>[-\d]+)$', ReleaseDetailView.as_view(), name='release_detail'),
+    url(r'^build/(?P<pk>[-\d]+)$', BuildDetailView.as_view(), name='build_detail'),
+    url(r'^package/(?P<pk>[-\d]+)$', PackageDetailView.as_view(), name='package_detail'),
+    url(r'^version/(?P<pk>[-\d]+)$', VersionDetailView.as_view(), name='version_detail')
 ]
 
 if settings.DEBUG:

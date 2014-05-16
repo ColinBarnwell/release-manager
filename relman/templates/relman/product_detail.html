@@ -3,145 +3,47 @@
 
 {% block content %}
 
-    <div class="jumbotron">
-        <h1>{{ product.name }}</h1>
+    <h1>{{ product.name }}</h1>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-striped table-hover">
+                <th>{% trans "Version" %}</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Status" %}</th>
+                {% for release in product.releases.all %}
+                    <tr data-ajax-url="{{ release.get_ajax_url }}" data-ajax-target="#release-details">
+                        <td>
+                            {% if release == current_release %}
+                                <b>{{ release.version_number }}</b>
+                            {% else %}
+                                {{ release.version_number }}
+                            {% endif %}
+                        </td>
+                        <td>{{ release.target_date }}</td>
+                        <td>
+                            <span class="label
+                                {% if release.is_obsolete %}
+                                    label-default
+                                {% elif release.is_proposed %}
+                                    label-warning
+                                {% elif release.is_in_progress %}
+                                    label-info
+                                {% elif release.is_released %}
+                                    label-success
+                                {% endif %}">
+                                {{ release.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
-
-    <div class="panel-group" id="products">
-
-        {% with current_release=product.current_release next_release=product.next_release %}
-            <div class="panel panel-default">
-
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <b>{% trans "Curent release" %}:</b>
-                            {% if current_release %}
-                                {{ current_release.version_number }}
-                                ({{ current_release.target_date }})
-                            {% endif %}
-                        </div>
-                        <div class="col-xs-6">
-                            {% if next_release %}
-                                <b>{% trans "Next release" %}:</b>
-                                {{ next_release.version_number }}
-                                ({{ next_release.target_date }})
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <table class="table table-striped">
-                                <th>{% trans "Version" %}</th>
-                                <th>{% trans "Date" %}</th>
-                                <th>{% trans "Status" %}</th>
-                                {% for release in product.releases.all %}
-                                    <tr>
-                                        <td>
-                                            {% if release == current_release %}
-                                                <b>{{ release.version_number }}</b>
-                                            {% else %}
-                                                {{ release.version_number }}
-                                            {% endif %}
-                                        </td>
-                                        <td>{{ release.target_date }}</td>
-                                        <td>{{ release.get_status_display }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                        <div class="col-xs-6">
-                            {% if next_release.notes %}
-                            <p>{% trans "Notes" %}:</p>
-                                <div class="well well-sm">
-                                    {{ next_release.notes|linebreaks }}
-                                </div>
-                            {% endif %}
-                            <p>{% trans "Dependencies" %}:</p>
-                            <div class="well well-sm">
-                                {% for dependency in next_release.dependencies.all %}
-                                    <a class="label
-                                    {% if dependency.is_cancelled %}
-                                        label-danger
-                                    {% elif dependency.is_released %}
-                                        label-success
-                                    {% elif dependency.target_date > next_release.target_date %}
-                                        label-danger
-                                    {% else %}
-                                        label-warning
-                                    {% endif %}
-                                    " href="{{ dependency.package.get_absolute_url }}">{{ dependency }}</a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            {% trans "Build history" %}
-                        </div>
-                        <div class="col-xs-6">
-                            {% trans "Promotions" %}
-                        </div>
-                    </div>
-                </div>
-
-                {% with builds=next_release.builds.all %}
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="panel-group" id="promotions-panel">
-                                <div class="col-xs-6">
-                                    <table class="table table-striped">
-                                        <th>{% trans "Build number" %}</th>
-                                        <th>{% trans "Code name" %}</th>
-                                        <th>{% trans "Status" %}</th>
-                                        {% for build in builds %}
-                                            <tr>
-                                                <td>{{ build.build_number }}</td>
-                                                <td>{{ build.code_name }}</td>
-                                                <td><a data-toggle="collapse" data-parent="#promotions-panel" href="#promotion-panel-{{ forloop.counter}}">{{ build.get_status_display }}</a></td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                                <div class="col-xs-6">
-                                    {% for build in builds %}
-                                    <div id="promotion-panel-{{ forloop.counter}}" class="panel-collapse collapse{% if forloop.first %} in{% endif %}">
-                                        <div class="panel-heading">
-                                            {{ build }}
-                                        </div>
-                                        <div class="panel-body">
-                                            <table class="table table-striped">
-                                                <th>{% trans "Environment" %}</th>
-                                                <th>{% trans "Status" %}</th>
-
-                                                    {% for promotion in build.promotions.all %}
-                                                        <tr>
-                                                            <td>{{ promotion.environment.name }}</td>
-                                                            <td>{{ promotion.get_status_display }}</td>
-                                                        </tr>
-                                                    {% endfor %}
-
-                                            </table>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endwith %}
-            </div>
-        {% endwith %}
-
+    <div class="row" id="release-details">
+        {% if release %}
+            {% include 'relman/includes/product__release.html' %}
+        {% endif %}
     </div>
 
 {% endblock content %}

@@ -61,8 +61,35 @@ class PackageVersion(SoftwareVersion):
         blank=True
     )
 
+    def get_absolute_url(self):
+        return u"%s?v=%s" % (self.package.get_absolute_url(), self.version_number())
+
+    def get_ajax_url(self):
+        return reverse('version_detail', kwargs={'pk': self.pk})
+
     def __unicode__(self):
         return super(PackageVersion, self).__unicode__(name=self.package.name)
 
     class Meta(SoftwareVersion.Meta):
+        app_label = 'relman'
+
+
+class Change(models.Model):
+    """
+    A change introduced by a new version.
+    """
+    version = models.ForeignKey(
+        PackageVersion,
+        verbose_name=(_("Version")),
+        related_name='changes',
+        editable=False
+    )
+    description = models.TextField(
+        _("Description")
+    )
+
+    def __unicode__(self):
+        return self.description
+
+    class Meta:
         app_label = 'relman'
