@@ -16,19 +16,19 @@ class ProductDetailView(DetailView):
                 try:
                     major, minor, patch = self.request.GET['v'].split('.')
                     alpha = ''
-                    try:
-                        release = ProductRelease.objects.get(
-                            product=self.object,
-                            major_version=major,
-                            minor_version=minor,
-                            patch_version=patch,
-                            alpha_version=alpha
-                        )
-                        data['release'] = release
-                    except ProductRelease.DoesNotExist:
-                        pass
                 except ValueError:
-                    pass
+                    return data
+            try:
+                release = ProductRelease.objects.get(
+                    product=self.object,
+                    major_version=major,
+                    minor_version=minor,
+                    patch_version=patch,
+                    alpha_version=alpha
+                )
+                data['release'] = release
+            except ProductRelease.DoesNotExist:
+                pass
         return data
 
 

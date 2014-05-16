@@ -16,19 +16,19 @@ class PackageDetailView(DetailView):
                 try:
                     major, minor, patch = self.request.GET['v'].split('.')
                     alpha = ''
-                    try:
-                        version = PackageVersion.objects.get(
-                            package=self.object,
-                            major_version=major,
-                            minor_version=minor,
-                            patch_version=patch,
-                            alpha_version=alpha
-                        )
-                        data['version'] = version
-                    except PackageVersion.DoesNotExist:
-                        pass
                 except ValueError:
-                    pass
+                    return data
+            try:
+                version = PackageVersion.objects.get(
+                    package=self.object,
+                    major_version=major,
+                    minor_version=minor,
+                    patch_version=patch,
+                    alpha_version=alpha
+                )
+                data['version'] = version
+            except PackageVersion.DoesNotExist:
+                pass
         return data
 
 
