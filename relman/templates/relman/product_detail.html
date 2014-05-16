@@ -11,29 +11,32 @@
                 <th>{% trans "Version" %}</th>
                 <th>{% trans "Date" %}</th>
                 <th>{% trans "Status" %}</th>
-                {% for release in product.releases.all %}
-                    <tr data-ajax-url="{{ release.get_ajax_url }}" data-ajax-target="#release-details">
+                <th></th>
+                {% for product_release in product.releases.all %}
+                    <tr data-ajax-url="{{ product_release.get_ajax_url }}" data-ajax-target="#release-details" {% if product_release = release %}class="warning"{% endif %}>
                         <td>
-                            {% if release == current_release %}
-                                <b>{{ release.version_number }}</b>
-                            {% else %}
-                                {{ release.version_number }}
-                            {% endif %}
+                            {{ product_release.version_number }}
                         </td>
-                        <td>{{ release.target_date }}</td>
+                        <td>{{ product_release.target_date }}</td>
                         <td>
                             <span class="label
-                                {% if release.is_obsolete %}
+                                {% if product_release.is_obsolete %}
                                     label-default
-                                {% elif release.is_proposed %}
+                                {% elif product_release.is_proposed %}
                                     label-warning
-                                {% elif release.is_in_progress %}
+                                {% elif product_release.is_in_progress %}
                                     label-info
-                                {% elif release.is_released %}
+                                {% elif product_release.is_released %}
                                     label-success
                                 {% endif %}">
-                                {{ release.get_status_display }}
+                                {{ product_release.get_status_display }}
                             </span>
+                        </td>
+                        <td>
+                            <a class="badge pull-right" data-comments-url="{{ product_release.get_comments_url }}">
+                                <span class="glyphicon glyphicon-comment"></span>
+                                {{ product_release.comments.count }}
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -10,23 +10,30 @@
                 <th>{% trans "Version" %}</th>
                 <th>{% trans "Date" %}</th>
                 <th>{% trans "Status" %}</th>
-                {% for version in package.versions.all %}
-                    <tr data-ajax-url="{{ version.get_ajax_url }}" data-ajax-target="#version-details">
-                        <td>{{ version.version_number }}</td>
-                        <td>{{ version.target_date }}</td>
+                <th></th>
+                {% for package_version in package.versions.all %}
+                    <tr data-ajax-url="{{ package_version.get_ajax_url }}" data-ajax-target="#version-details" {% if package_version = version %}class="warning"{% endif %}>
+                        <td>{{ package_version.version_number }}</td>
+                        <td>{{ package_version.target_date }}</td>
                         <td>
                             <span class="label
-                                {% if version.is_obsolete %}
+                                {% if package_version.is_obsolete %}
                                     label-default
-                                {% elif version.is_proposed %}
+                                {% elif package_version.is_proposed %}
                                     label-warning
-                                {% elif version.is_in_progress %}
+                                {% elif package_version.is_in_progress %}
                                     label-info
-                                {% elif version.is_released %}
+                                {% elif package_version.is_released %}
                                     label-success
                                 {% endif %}">
-                                {{ version.get_status_display }}
+                                {{ package_version.get_status_display }}
                             </span>
+                        </td>
+                        <td>
+                            <a class="badge pull-right" data-comments-url="{{ package_version.get_comments_url }}">
+                                <span class="glyphicon glyphicon-comment"></span>
+                                {{ package_version.comments.count }}
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

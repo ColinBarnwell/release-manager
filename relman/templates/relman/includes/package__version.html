@@ -5,28 +5,69 @@
 </div>
 
 <div class="col-xs-4">
-    <p>{% trans "Change log" %}:</p>
-    <ul>
-        {% for change in version.changes.all %}
-        <li>{{ change.description }}</li>
-        {% endfor %}
-    </ul>
-    <p>Notes:</p>
+    <h4>{% trans "Notes" %}</h4>
     {{ version.notes|linebreaks }}
 </div>
 
 <div class="col-xs-8">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped">
+        <th>{% trans "Change log" %}</th>
+        <th></th>
+        {% for change in version.changes.all %}
+            <tr>
+                <td>{{ change.description }}</td>
+                <td>
+                    <a class="badge pull-right" data-comments-url="{{ change.get_comments_url }}">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        {{ change.comments.count }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="col-xs-4">
+    <table class="table table-striped">
+        <th>{% trans "Build" %}</th>
+        <th>{% trans "Status" %}</th>
+        <th></th>
+        {% for build in version.builds.all %}
+            <tr>
+                <td>{{ build }}</td>
+                <td>
+                    <span class="label
+                        {% if build.is_accepted %}
+                            label-success
+                        {% elif build.is_rejected %}
+                            label-danger
+                        {% elif build.is_provisional %}
+                            label-info
+                        {% else %}
+                            label-warning
+                        {% endif %}">
+                        {{ build.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <a class="badge pull-right" data-comments-url="{{ build.get_comments_url }}">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        {{ build.comments.count }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="col-xs-8">
+    <table class="table table-striped">
         <th>{% trans "Dependant release" %}</th>
-        <th>{% trans "Version" %}</th>
-        <th>{% trans "Date" %}</th>
         <th>{% trans "Status" %}</th>
         <th>{% trans "Issues" %}</th>
         {% for dependant in version.dependants.all %}
             <tr>
-                <td>{{ dependant.product }}</td>
-                <td>{{ dependant.version_number }}</td>
-                <td>{{ dependant.target_date }}</td>
+                <td>{{ dependant }}</td>
                 <td>
                     <span class="label
                         {% if dependant.is_obsolete %}

@@ -1,32 +1,44 @@
 {% load i18n %}
 
 <div class="col-xs-12">
-    <h2>{{ release.version_number }}</h2>
+    <h3>{{ release.version_number }}</h3>
+</div>
+
+<div class="col-xs-12">
+    <h4>{% trans "Dependencies" %}</h4>
+    <ul class="list-inline">
+        {% for dependency in release.dependencies.all %}
+            <li>
+                <p>
+                    <a href="{{ dependency.get_absolute_url }}" class="label
+                        {% if dependency.is_cancelled %}
+                            label-danger
+                        {% elif dependency.is_released %}
+                            label-success
+                        {% elif dependency.target_date > release.target_date %}
+                            label-danger
+                        {% else %}
+                            label-warning
+                        {% endif %}
+                        " target="_blank">{{ dependency }}
+                    </a>
+                </p>
+            </li>
+        {% endfor %}
+    </ul>
 </div>
 
 <div class="col-xs-4">
+    <h4>{% trans "Notes" %}</h4>
     {{ release.notes|linebreaks }}
-    <div class="well well-sm">
-        {% for dependency in release.dependencies.all %}
-            <a href="{{ dependency.get_absolute_url }}" class="label
-            {% if dependency.is_cancelled %}
-                label-danger
-            {% elif dependency.is_released %}
-                label-success
-            {% elif dependency.target_date > release.target_date %}
-                label-danger
-            {% else %}
-                label-warning
-            {% endif %}
-            " target="_blank">{{ dependency }}</a>
-        {% endfor %}
-    </div>
+
 </div>
 
 <div class="col-xs-4">
     <table class="table table-striped table-hover">
         <th>{% trans "Build Number" %}</th>
         <th>{% trans "Status" %}</th>
+        <th></th>
         {% for build in release.builds.all %}
             <tr data-ajax-url="{{ build.get_ajax_url }}" data-ajax-target="#build-details">
                 <td>{{ release.version_number }}.{{ build.code }}</td>
@@ -43,6 +55,12 @@
                         {% endif %}">
                         {{ build.get_status_display }}
                     </span>
+                </td>
+                <td>
+                    <a class="badge pull-right" data-comments-url="{{ build.get_comments_url }}">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        {{ build.comments.count }}
+                    </a>
                 </td>
             </tr>
         {% endfor %}

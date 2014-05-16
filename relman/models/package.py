@@ -2,7 +2,9 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy as _p
 
-from mixins import SoftwareVersion
+from model_utils import Choices
+
+from mixins import CommentsMixin, SoftwareVersion
 
 
 class Package(models.Model):
@@ -44,7 +46,7 @@ class Package(models.Model):
         app_label = 'relman'
 
 
-class PackageVersion(SoftwareVersion):
+class PackageVersion(CommentsMixin, SoftwareVersion):
     """
     A version of a package.
     """
@@ -54,12 +56,24 @@ class PackageVersion(SoftwareVersion):
         related_name='versions',
         editable=False
     )
-    previous_version = models.ForeignKey(
-        'PackageVersion',
-        verbose_name=(_("Previous version")),
-        null=True,
-        blank=True
-    )
+
+    def previous_versions(self):
+        return PackageVersion.objects.filter(
+            package=self.package
+        ).filter(
+            models.Q(
+                major_version=self.major_version,
+                minor_version=self.minor_version,
+                patch_version__lt=self.patch_version
+            ) |
+            models.Q(
+                major_version=self.major_version,
+                minor_version__lt=self.minor_version
+            ) |
+            models.Q(
+                major_version__lt=self.major_version
+            )
+        )
 
     def get_absolute_url(self):
         return u"%s?v=%s" % (self.package.get_absolute_url(), self.version_number())
@@ -74,7 +88,52 @@ class PackageVersion(SoftwareVersion):
         app_label = 'relman'
 
 
-class Change(models.Model):
+class PackageVersionBuild(CommentsMixin):
+    """
+    A package version build represents an iteration of the current release
+    """
+    STATUS_CHOICES = Choices(
+        ('in_progress', _("In progress")),
+        ('rejected', _("Rejected")),
+        ('provisional', _("Provisional")),
+        ('accepted', _("Accepted")),
+    )
+
+    version = models.ForeignKey(
+        PackageVersion,
+        verbose_name=(_("Version")),
+        related_name='builds',
+        editable=False
+    )
+    code = models.CharField(_("Code"), max_length=32)
+
+    status = models.CharField(
+        _("Status"),
+        max_length=16,
+        choices=STATUS_CHOICES
+    )
+
+    @property
+    def is_accepted(self):
+        return self.status == self.STATUS_CHOICES.accepted
+
+    @property
+    def is_provisional(self):
+        return self.status == self.STATUS_CHOICES.provisional
+
+    @property
+    def is_rejected(self):
+        return self.status == self.STATUS_CHOICES.rejected
+
+    def __unicode__(self):
+        return u"%s.%s" % (self.version.version_number(), self.code)
+
+    class Meta:
+        app_label = 'relman'
+        ordering = '-code',
+
+
+class Change(CommentsMixin):
     """
     A change introduced by a new version.
     """

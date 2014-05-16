@@ -1,19 +1,31 @@
 from django.contrib import admin
+from django.contrib.contenttypes import generic
 
 from models import (
+    Comment,
     Product,
     ProductRelease,
     Build,
     Package,
     PackageVersion,
+    PackageVersionBuild,
     Change,
     Environment,
     Promotion
 )
 
 
+class CommentGenericInline(generic.GenericStackedInline):
+    model = Comment
+    extra = 1
+
+
 class BuildInline(admin.TabularInline):
     model = Build
+    extra = 1
+
+class PackageVersionBuildInline(admin.TabularInline):
+    model = PackageVersionBuild
     extra = 1
 
 
@@ -37,6 +49,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 class ProductReleaseAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'status', 'target_date')
+    inlines = CommentGenericInline,
 
 
 class BuildAdmin(admin.ModelAdmin):
@@ -49,7 +62,7 @@ class PackageAdmin(admin.ModelAdmin):
 
 
 class PackageVersionAdmin(admin.ModelAdmin):
-    inlines = ChangeInline,
+    inlines = (ChangeInline, PackageVersionBuildInline)
 
 
 admin.site.register(Product, ProductAdmin)

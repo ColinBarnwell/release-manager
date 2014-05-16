@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _, pgettext_lazy as _p
 
 from model_utils import Choices
 
-from mixins import SoftwareVersion
+from mixins import CommentsMixin, SoftwareVersion
 
 
 class Product(models.Model):
@@ -61,7 +62,7 @@ class Product(models.Model):
         app_label = 'relman'
 
 
-class ProductRelease(SoftwareVersion):
+class ProductRelease(CommentsMixin, SoftwareVersion):
     """
     A release is an event, either in the past or in the future, that represents
     a product being deployed in a specific state.
@@ -71,9 +72,9 @@ class ProductRelease(SoftwareVersion):
         verbose_name=(_("Product")),
         related_name='releases',
     )
-    previous_release = models.ForeignKey(
-        'ProductRelease',
-        verbose_name=(_("Previous release")),
+    release_manager = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("Release manager"),
         null=True,
         blank=True
     )
@@ -84,6 +85,24 @@ class ProductRelease(SoftwareVersion):
         null=True,
         blank=True
     )
+
+    def previous_versions(self):
+        return ProductRelease.objects.filter(
+            product=self.product
+        ).filter(
+            models.Q(
+                major_version=self.major_version,
+                minor_version=self.minor_version,
+                patch_version__lt=self.patch_version
+            ) |
+            models.Q(
+                major_version=self.major_version,
+                minor_version__lt=self.minor_version
+            ) |
+            models.Q(
+                major_version__lt=self.major_version
+            )
+        )
 
     def get_absolute_url(self):
         return u"%s?v=%s" % (self.product.get_absolute_url(), self.version_number())
@@ -98,7 +117,7 @@ class ProductRelease(SoftwareVersion):
         app_label = 'relman'
 
 
-class Build(models.Model):
+class Build(CommentsMixin):
     """
     A build represents a deployment of a release version. A successful build
     is a successful release. An unsuccessful build should be superceded by a

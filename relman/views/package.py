@@ -11,23 +11,15 @@ class PackageDetailView(DetailView):
         data = super(PackageDetailView, self).get_context_data(**kwargs)
         if 'v' in self.request.GET:
             try:
-                major, minor, patch, alpha = self.request.GET['v'].split('.')
-            except ValueError:
-                try:
-                    major, minor, patch = self.request.GET['v'].split('.')
-                    alpha = ''
-                except ValueError:
-                    return data
-            try:
+                major, minor, patch = self.request.GET['v'].split('.')
                 version = PackageVersion.objects.get(
                     package=self.object,
                     major_version=major,
                     minor_version=minor,
-                    patch_version=patch,
-                    alpha_version=alpha
+                    patch_version=patch
                 )
                 data['version'] = version
-            except PackageVersion.DoesNotExist:
+            except ValueError, PackageVersion.DoesNotExist:
                 pass
         return data
 

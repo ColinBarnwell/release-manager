@@ -9,7 +9,8 @@ from views import (
     ReleaseDetailView,
     BuildDetailView,
     PackageDetailView,
-    VersionDetailView
+    VersionDetailView,
+    CommentsView
 )
 
 
@@ -31,7 +32,8 @@ urlpatterns = [
     url(r'^release/(?P<pk>[-\d]+)$', ReleaseDetailView.as_view(), name='release_detail'),
     url(r'^build/(?P<pk>[-\d]+)$', BuildDetailView.as_view(), name='build_detail'),
     url(r'^package/(?P<pk>[-\d]+)$', PackageDetailView.as_view(), name='package_detail'),
-    url(r'^version/(?P<pk>[-\d]+)$', VersionDetailView.as_view(), name='version_detail')
+    url(r'^version/(?P<pk>[-\d]+)$', VersionDetailView.as_view(), name='version_detail'),
+    url(r'^comments/(?P<content_type>[-\d]+)/(?P<object_id>[-\d]+)$', CommentsView.as_view(), name='comments_list')
 ]
 
 if settings.DEBUG:

@@ -1,5 +1,8 @@
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+from django.core.urlresolvers import reverse
 from django.db import models
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy as _p
+from django.utils.translation import ugettext_lazy as _
 
 from model_utils import Choices
 
@@ -23,7 +26,6 @@ class SoftwareVersion(models.Model):
     major_version = models.PositiveIntegerField(_("Major version"), default=0)
     minor_version = models.PositiveIntegerField(_("Minor version"), default=0)
     patch_version = models.PositiveIntegerField(_("Patch version"), default=0)
-    alpha_version = models.CharField(_("Alpha version"), max_length=32, blank=True)
 
     target_date = models.DateField()
 
@@ -49,12 +51,10 @@ class SoftwareVersion(models.Model):
         return self.status == self.STATUS_CHOICES.released
 
     def version_number(self):
-        return u"{major}.{minor}.{patch}{alpha_sep}{alpha}".format(
+        return u"{major}.{minor}.{patch}".format(
             major=self.major_version,
             minor=self.minor_version,
             patch=self.patch_version,
-            alpha_sep='.' if self.alpha_version else '',
-            alpha=self.alpha_version
         )
 
     def __unicode__(self, name=''):
@@ -66,4 +66,21 @@ class SoftwareVersion(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ('-major_version', '-minor_version', '-patch_version', '-target_date')
+        ordering = ('-major_version', '-minor_version', '-patch_version')
+
+
+class CommentsMixin(models.Model):
+
+    comments = generic.GenericRelation('Comment')
+
+    def get_comments_url(self):
+        return reverse(
+            'comments_list',
+            kwargs={
+                'content_type': ContentType.objects.get_for_model(self.__class__).pk,
+                'object_id': self.pk
+            }
+        )
+
+    class Meta:
+        abstract = True
