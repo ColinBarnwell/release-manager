@@ -1,6 +1,0 @@
-{% for comment in object_list %}
-    {{ comment.notes|linebreaks }}
-    <h5 class="text-right">{{ comment.author.get_full_name }}</h4>
-    <h6 class="text-right">{{ comment.created }}</h6>
-    <hr />
-{% endfor %}

@@ -19,7 +19,7 @@ $(function() {
         $(this).parents('table').find('tr').removeClass('warning');
         $(this).addClass('warning');
     });
-    $('body').on('click', '[data-comments-url]', function() {
-        ajax_load($(this).attr('data-comments-url'), '#comments-display', function() {$('#comments-modal').modal();});
+    $('body').on('click', '[data-modal-url]', function() {
+        ajax_load($(this).attr('data-modal-url'), '#form-modal-content', function() {$('#form-modal').modal();});
     });
 });

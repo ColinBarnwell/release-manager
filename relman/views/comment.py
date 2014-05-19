@@ -5,7 +5,7 @@ from ..models import Comment
 
 class CommentsView(ListView):
 
-    template_name = 'relman/includes/comments.html'
+    template_name = 'relman/includes/modals/comments.html'
 
     def get_queryset(self):
         return Comment.objects.filter(

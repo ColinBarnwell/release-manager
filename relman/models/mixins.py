@@ -20,7 +20,8 @@ class SoftwareVersion(models.Model):
     status = models.CharField(
         _("Status"),
         max_length=16,
-        choices=STATUS_CHOICES
+        choices=STATUS_CHOICES,
+        default=STATUS_CHOICES.proposed
     )
 
     major_version = models.PositiveIntegerField(_("Major version"), default=0)

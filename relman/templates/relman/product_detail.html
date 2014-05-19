@@ -7,40 +7,49 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <table class="table table-striped table-hover">
-                <th>{% trans "Version" %}</th>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Status" %}</th>
-                <th></th>
-                {% for product_release in product.releases.all %}
-                    <tr data-ajax-url="{{ product_release.get_ajax_url }}" data-ajax-target="#release-details" {% if product_release = release %}class="warning"{% endif %}>
-                        <td>
-                            {{ product_release.version_number }}
-                        </td>
-                        <td>{{ product_release.target_date }}</td>
-                        <td>
-                            <span class="label
-                                {% if product_release.is_obsolete %}
-                                    label-default
-                                {% elif product_release.is_proposed %}
-                                    label-warning
-                                {% elif product_release.is_in_progress %}
-                                    label-info
-                                {% elif product_release.is_released %}
-                                    label-success
-                                {% endif %}">
-                                {{ product_release.get_status_display }}
-                            </span>
-                        </td>
-                        <td>
-                            <a class="badge pull-right" data-comments-url="{{ product_release.get_comments_url }}">
-                                <span class="glyphicon glyphicon-comment"></span>
-                                {{ product_release.comments.count }}
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
+            <form class="form-inline" method="POST" action="">
+                <table class="table table-striped table-hover">
+                    <th>{% trans "Version" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Manager" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th></th>
+                    <th></th>
+                    {% for product_release in product.releases.all %}
+                        <tr data-ajax-url="{{ product_release.get_ajax_url }}" data-ajax-target="#release-details" {% if product_release = release %}class="warning"{% endif %}>
+                            <td>
+                                {{ product_release.version_number }}
+                            </td>
+                            <td>{{ product_release.target_date }}</td>
+                            <td>{{ product_release.release_manager.get_full_name }}</td>
+                            <td>
+                                <span class="label
+                                    {% if product_release.is_obsolete %}
+                                        label-default
+                                    {% elif product_release.is_proposed %}
+                                        label-warning
+                                    {% elif product_release.is_in_progress %}
+                                        label-info
+                                    {% elif product_release.is_released %}
+                                        label-success
+                                    {% endif %}">
+                                    {{ product_release.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a class="badge pull-right" data-modal-url="{{ product_release.get_comments_url }}">
+                                    <span class="glyphicon glyphicon-comment"></span>
+                                    {{ product_release.comments.count }}
+                                </a>
+                            </td>
+                            <td>
+                                <button title="" type="button" class="btn btn-danger btn-xs pull-right" data-modal-url="{% url 'release_delete' pk=product_release.pk %}"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                {% csrf_token %}
+            </form>
         </div>
     </div>
     <div class="row" id="release-details">

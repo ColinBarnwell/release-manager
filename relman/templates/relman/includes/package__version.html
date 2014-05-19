@@ -17,7 +17,7 @@
             <tr>
                 <td>{{ change.description }}</td>
                 <td>
-                    <a class="badge pull-right" data-comments-url="{{ change.get_comments_url }}">
+                    <a class="badge pull-right" data-modal-url="{{ change.get_comments_url }}">
                         <span class="glyphicon glyphicon-comment"></span>
                         {{ change.comments.count }}
                     </a>
@@ -50,7 +50,7 @@
                     </span>
                 </td>
                 <td>
-                    <a class="badge pull-right" data-comments-url="{{ build.get_comments_url }}">
+                    <a class="badge pull-right" data-modal-url="{{ build.get_comments_url }}">
                         <span class="glyphicon glyphicon-comment"></span>
                         {{ build.comments.count }}
                     </a>

@@ -3,6 +3,8 @@
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 
+from django.contrib.messages import constants as messages
+
 
 ########## MIDDLEWARE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#middleware-classes
@@ -33,6 +35,7 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'crispy_forms',
     'south',
 )
 
@@ -75,6 +78,11 @@ USE_TZ = True
 SITE_ID = 1
 
 LANGUAGE_CODE = 'en-uk'
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'default',
+    messages.ERROR: 'danger'
+}
 ########## END GENERAL CONFIGURATION
 
 
@@ -125,7 +133,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.request'
+    'django.core.context_processors.request',
+    'relman.context_processors.active_users'
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
@@ -137,6 +146,9 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     normpath(join(SITE_ROOT, 'templates')),
 )
+
+CRISPY_TEMPLATE_PACK = 'bootstrap'
+
 ########## END TEMPLATE CONFIGURATION
 
 

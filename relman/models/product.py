@@ -107,6 +107,9 @@ class ProductRelease(CommentsMixin, SoftwareVersion):
     def get_absolute_url(self):
         return u"%s?v=%s" % (self.product.get_absolute_url(), self.version_number())
 
+    def get_delete_url(self):
+        return reverse('release_delete', kwargs={'pk': self.pk})
+
     def get_ajax_url(self):
         return reverse('release_detail', kwargs={'pk': self.pk})
 
