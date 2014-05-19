@@ -19,10 +19,9 @@ function ajax_submit(form, target_id) {
         data: form.serialize(),
         success: function(response) {
             if (response.indexOf('<!DOCTYPE html>') > 0) {
-                // Quick and dirty replace of the body element if the response
-                // contains a complete document (assumes same <head> content)
-                $('body').html($(response, 'body'));
-                $('body').removeClass();
+                document.open('text/html', 'replace');
+                document.write(response);
+                document.close();
             } else {
                 $(target_id).html(response);
             }
