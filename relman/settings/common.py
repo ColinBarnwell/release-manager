@@ -147,7 +147,7 @@ TEMPLATE_DIRS = (
     normpath(join(SITE_ROOT, 'templates')),
 )
 
-CRISPY_TEMPLATE_PACK = 'bootstrap'
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 ########## END TEMPLATE CONFIGURATION
 

@@ -12,6 +12,16 @@ function ajax_load(url, target_id, callback) {
     });
 }
 
+function ajax_submit(form, target_id) {
+    $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: form.serialize(),
+        success: function(response) {
+            $(target_id).html(response);
+        }
+    });
+}
 
 $(function() {
     $('body').on('click', '[data-ajax-url]', function() {
@@ -21,5 +31,9 @@ $(function() {
     });
     $('body').on('click', '[data-modal-url]', function() {
         ajax_load($(this).attr('data-modal-url'), '#form-modal-content', function() {$('#form-modal').modal();});
+    });
+    $('body').on('click', '[data-ajax-submit]', function() {
+        ajax_submit($('#modal-form'), '#form-modal-content');
+        return false;
     });
 });

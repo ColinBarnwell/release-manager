@@ -14,7 +14,7 @@
                     <th>{% trans "Manager" %}</th>
                     <th>{% trans "Status" %}</th>
                     <th></th>
-                    <th></th>
+                    <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'release_create' product_pk=product.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
                     {% for product_release in product.releases.all %}
                         <tr data-ajax-url="{{ product_release.get_ajax_url }}" data-ajax-target="#release-details" {% if product_release = release %}class="warning"{% endif %}>
                             <td>

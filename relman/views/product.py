@@ -1,6 +1,7 @@
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
-from django.views.generic import DetailView, DeleteView
+from django.views.generic import DetailView, DeleteView, CreateView
 
 from ..forms import ProductReleaseForm
 from ..models import Product, ProductRelease, Build
@@ -29,6 +30,20 @@ class ProductDetailView(DetailView):
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
+
+
+class ReleaseCreateView(CreateView):
+    model = ProductRelease
+    template_name = 'relman/includes/modals/create.html'
+    form_class = ProductReleaseForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.product = get_object_or_404(Product, pk=kwargs['product_pk'])
+        return super(ReleaseCreateView, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.product = self.product
+        return super(ReleaseCreateView, self).form_valid(form)
 
 
 class ReleaseDetailView(DetailView):

@@ -24,9 +24,9 @@ class SoftwareVersion(models.Model):
         default=STATUS_CHOICES.proposed
     )
 
-    major_version = models.PositiveIntegerField(_("Major version"), default=0)
-    minor_version = models.PositiveIntegerField(_("Minor version"), default=0)
-    patch_version = models.PositiveIntegerField(_("Patch version"), default=0)
+    major_version = models.PositiveIntegerField(_("Major"), default=0)
+    minor_version = models.PositiveIntegerField(_("Minor"), default=0)
+    patch_version = models.PositiveIntegerField(_("Patch"), default=0)
 
     target_date = models.DateField()
 
