@@ -1,4 +1,3 @@
-from change import *
 from environment import *
 from package import *
 from product import *

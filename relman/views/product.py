@@ -45,6 +45,10 @@ class ReleaseCreateView(CreateView):
         form.instance.product = self.product
         return super(ReleaseCreateView, self).form_valid(form)
 
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been created").format(object=self.object))
+        return super(ReleaseCreateView, self).get_success_url()
+
 
 class ReleaseDetailView(DetailView):
     model = ProductRelease
