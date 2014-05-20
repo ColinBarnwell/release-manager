@@ -10,4 +10,6 @@ from product import (
 )
 from package import (
     PackageForm,
+    PackageVersionCreateForm,
+    PackageVersionEditForm,
 )

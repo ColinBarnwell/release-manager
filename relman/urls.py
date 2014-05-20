@@ -22,7 +22,10 @@ from views import (
     PackageCreateView,
     PackageDetailView,
     PackageUpdateView,
+    VersionCreateView,
     VersionDetailView,
+    VersionUpdateView,
+    VersionDeleteView,
     CommentsView
 )
 
@@ -63,7 +66,11 @@ urlpatterns = [
     url(r'^add_package$', PackageCreateView.as_view(), name='package_create'),
     url(r'^package/(?P<pk>[-\d]+)$', PackageDetailView.as_view(), name='package_detail'),
     url(r'^package/(?P<pk>[-\d]+)/update$', PackageUpdateView.as_view(), name='package_update'),
+    url(r'^package/(?P<package_pk>[-\d]+)/add_version$', VersionCreateView.as_view(), name='version_create'),
+
     url(r'^version/(?P<pk>[-\d]+)$', VersionDetailView.as_view(), name='version_detail'),
+    url(r'^version/(?P<pk>[-\d]+)/update$', VersionUpdateView.as_view(), name='version_update'),
+    url(r'^version/(?P<pk>[-\d]+)/delete$', VersionDeleteView.as_view(), name='version_delete'),
     url(r'^comments/(?P<content_type>[-\d]+)/(?P<object_id>[-\d]+)$', CommentsView.as_view(), name='comments_list')
 ]
 

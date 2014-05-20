@@ -19,6 +19,9 @@ from package import (
     PackageCreateView,
     PackageDetailView,
     PackageUpdateView,
-    VersionDetailView
+    VersionCreateView,
+    VersionDetailView,
+    VersionUpdateView,
+    VersionDeleteView
 )
 from comment import CommentsView

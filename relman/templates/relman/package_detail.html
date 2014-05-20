@@ -11,6 +11,7 @@
                 <th>{% trans "Date" %}</th>
                 <th>{% trans "Status" %}</th>
                 <th></th>
+                <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'version_create' package_pk=package.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
                 {% for package_version in package.versions.all %}
                     <tr data-ajax-url="{{ package_version.get_ajax_url }}" data-ajax-target="#version-details" {% if package_version = version %}class="warning"{% endif %}>
                         <td>{{ package_version.version_number }}</td>
@@ -34,6 +35,12 @@
                                 <span class="glyphicon glyphicon-comment"></span>
                                 {{ package_version.comments.count }}
                             </a>
+                        </td>
+                        <td>
+                            <span class="pull-right">
+                                <button type="button" class="btn btn-primary btn-xs"  data-modal-url="{% url 'version_update' pk=package_version.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
+                                <button type="button" class="btn btn-danger btn-xs" data-modal-url="{% url 'version_delete' pk=package_version.pk %}"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                            </span>
                         </td>
                     </tr>
                 {% endfor %}
