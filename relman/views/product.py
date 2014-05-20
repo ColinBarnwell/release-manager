@@ -81,7 +81,11 @@ class ReleaseCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.product = self.product
-        return super(ReleaseCreateView, self).form_valid(form)
+        response = super(ReleaseCreateView, self).form_valid(form)
+        previous_versions = self.object.previous_versions()
+        if previous_versions:
+            self.object.dependencies.add(*previous_versions[0].dependencies.all())
+        return response
 
     def get_success_url(self):
         messages.success(self.request, _("{object} has been created").format(object=self.object))
