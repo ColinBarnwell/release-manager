@@ -14,7 +14,7 @@ class Package(models.Model):
     only indirectly part of the release schedule.
     """
     name = models.CharField(
-        _p("object name", "Name"),
+        _p(u"object name", u"Name"),
         max_length=255,
         unique=True
     )

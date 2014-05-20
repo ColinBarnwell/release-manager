@@ -15,7 +15,7 @@ class Product(models.Model):
     together multiple packages, each with their own version numbers.
     """
     name = models.CharField(
-        _p("object name", "Name"),
+        _p(u"object name", u"Name"),
         max_length=255,
         unique=True
     )

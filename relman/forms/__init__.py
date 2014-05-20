@@ -8,3 +8,6 @@ from product import (
     CheckCreateForm,
     CheckUpdateForm
 )
+from package import (
+    PackageForm,
+)

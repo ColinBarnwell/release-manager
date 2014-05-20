@@ -19,7 +19,9 @@ from views import (
     BuildUpdateView,
     CheckCreateView,
     CheckUpdateView,
+    PackageCreateView,
     PackageDetailView,
+    PackageUpdateView,
     VersionDetailView,
     CommentsView
 )
@@ -58,7 +60,9 @@ urlpatterns = [
 
     url(r'^check/(?P<pk>[-\d]+)/update$', CheckUpdateView.as_view(), name='check_update'),
 
+    url(r'^add_package$', PackageCreateView.as_view(), name='package_create'),
     url(r'^package/(?P<pk>[-\d]+)$', PackageDetailView.as_view(), name='package_detail'),
+    url(r'^package/(?P<pk>[-\d]+)/update$', PackageUpdateView.as_view(), name='package_update'),
     url(r'^version/(?P<pk>[-\d]+)$', VersionDetailView.as_view(), name='version_detail'),
     url(r'^comments/(?P<content_type>[-\d]+)/(?P<object_id>[-\d]+)$', CommentsView.as_view(), name='comments_list')
 ]

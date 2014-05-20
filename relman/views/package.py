@@ -1,6 +1,19 @@
-from django.views.generic import DetailView
+from django.contrib import messages
+from django.utils.translation import ugettext as _
+from django.views.generic import DetailView, CreateView, UpdateView
 
+from ..forms import PackageForm
 from ..models import Package, PackageVersion
+
+
+class PackageCreateView(CreateView):
+    model = Package
+    template_name = 'relman/includes/modals/create.html'
+    form_class = PackageForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been created").format(object=self.object))
+        return super(PackageCreateView, self).get_success_url()
 
 
 class PackageDetailView(DetailView):
@@ -22,6 +35,16 @@ class PackageDetailView(DetailView):
             except ValueError, PackageVersion.DoesNotExist:
                 pass
         return data
+
+
+class PackageUpdateView(UpdateView):
+    model = Package
+    template_name = 'relman/includes/modals/update.html'
+    form_class = PackageForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been updated").format(object=self.object))
+        return '/'
 
 
 class VersionDetailView(DetailView):

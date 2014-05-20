@@ -15,5 +15,10 @@ from product import (
     CheckCreateView,
     CheckUpdateView
 )
-from package import PackageDetailView, VersionDetailView
+from package import (
+    PackageCreateView,
+    PackageDetailView,
+    PackageUpdateView,
+    VersionDetailView
+)
 from comment import CommentsView
