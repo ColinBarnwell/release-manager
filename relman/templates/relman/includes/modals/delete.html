@@ -8,7 +8,13 @@
 
     <div class="modal-body" >
         <div class="alert alert-danger">
-            <h4>{% blocktrans %}Are you sure you want to delete {{ object }}?{% endblocktrans %}</h4>
+            <h4>
+                {% if delete_message %}
+                    {{ delete_message }}
+                {% else %}
+                    {% blocktrans %}Are you sure you want to delete {{ object }}?{% endblocktrans %}
+                {% endif %}
+            </h4>
         </div>
     </div>
 

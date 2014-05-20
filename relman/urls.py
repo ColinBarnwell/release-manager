@@ -12,6 +12,8 @@ from views import (
     ReleaseDetailView,
     ReleaseUpdateView,
     ReleaseDeleteView,
+    ReleaseCreateDependencyView,
+    ReleaseDeleteDependencyView,
     BuildCreateView,
     BuildDetailView,
     BuildUpdateView,
@@ -46,6 +48,8 @@ urlpatterns = [
     url(r'^release/(?P<pk>[-\d]+)$', ReleaseDetailView.as_view(), name='release_detail'),
     url(r'^release/(?P<pk>[-\d]+)/update$', ReleaseUpdateView.as_view(), name='release_update'),
     url(r'^release/(?P<pk>[-\d]+)/delete$', ReleaseDeleteView.as_view(), name='release_delete'),
+    url(r'^release/(?P<release_pk>[-\d]+)/dependency/create$', ReleaseCreateDependencyView.as_view(), name='release_dependency_create'),
+    url(r'^release/(?P<release_pk>[-\d]+)/dependency/(?P<version_pk>[-\d]+)/delete$', ReleaseDeleteDependencyView.as_view(), name='release_dependency_delete'),
     url(r'^release/(?P<release_pk>[-\d]+)/add_build$', BuildCreateView.as_view(), name='build_create'),
 
     url(r'^build/(?P<pk>[-\d]+)$', BuildDetailView.as_view(), name='build_detail'),

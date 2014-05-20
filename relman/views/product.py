@@ -8,6 +8,7 @@ from ..forms import (
     ProductForm,
     ProductReleaseCreateForm,
     ProductReleaseEditForm,
+    ProductReleaseDependencyCreateForm,
     BuildForm,
     CheckCreateForm,
     CheckUpdateForm
@@ -110,6 +111,55 @@ class ReleaseDeleteView(DeleteView):
     def get_success_url(self):
         messages.warning(self.request, _("{object} has been deleted").format(object=self.object))
         return self.object.product.get_absolute_url()
+
+
+class ReleaseCreateDependencyView(CreateView):
+    model = ProductRelease.dependencies.through
+    template_name = 'relman/includes/modals/create.html'
+    form_class = ProductReleaseDependencyCreateForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.release = get_object_or_404(ProductRelease, pk=kwargs['release_pk'])
+        return super(ReleaseCreateDependencyView, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self, **kwargs):
+        form_kwargs = super(ReleaseCreateDependencyView, self).get_form_kwargs(**kwargs)
+        form_kwargs['release'] = self.release
+        return form_kwargs
+
+    def form_valid(self, form):
+        form.instance.productrelease = self.release
+        return super(ReleaseCreateDependencyView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been added as a dependency").format(object=self.object.packageversion))
+        return self.object.productrelease.get_absolute_url()
+
+
+class ReleaseDeleteDependencyView(DeleteView):
+    model = ProductRelease.dependencies.through
+    template_name = 'relman/includes/modals/delete.html'
+
+    def get_object(self):
+        return get_object_or_404(
+            self.model,
+            productrelease_id=self.kwargs['release_pk'],
+            packageversion_id=self.kwargs['version_pk']
+        )
+
+    def get_context_data(self, **kwargs):
+        data = super(ReleaseDeleteDependencyView, self).get_context_data(**kwargs)
+        data['delete_message'] = _(
+            "Remove {version} as a dependency of {release}?"
+        ).format(
+            version=self.object.packageversion,
+            release=self.object.productrelease
+        )
+        return data
+
+    def get_success_url(self):
+        messages.warning(self.request, _("Dependency for {version} has been removed.").format(version=self.object.packageversion))
+        return self.object.productrelease.get_absolute_url()
 
 
 class BuildDetailView(DetailView):

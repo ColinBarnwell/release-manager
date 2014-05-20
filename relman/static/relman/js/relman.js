@@ -46,10 +46,12 @@ $(function() {
         }
         $(this).parents('table').find('tr').removeClass('warning');
         $(this).addClass('warning');
+        return false;
     });
 
     $('body').on('click', '[data-modal-url]', function() {
         ajax_load($(this).attr('data-modal-url'), '#form-modal-content', function() {$('#form-modal').modal();});
+        return false;
     });
 
     $('body').on('click', '[data-ajax-submit]', function() {

@@ -6,6 +6,8 @@ from product import (
     ReleaseDetailView,
     ReleaseUpdateView,
     ReleaseDeleteView,
+    ReleaseCreateDependencyView,
+    ReleaseDeleteDependencyView,
     BuildDetailView,
     ReleaseCreateView,
     BuildCreateView,

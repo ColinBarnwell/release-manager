@@ -76,6 +76,39 @@ class ProductReleaseEditForm(forms.ModelForm):
         )
 
 
+class ProductReleaseDependencyCreateForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.release = kwargs.pop('release', None)
+        super(ProductReleaseDependencyCreateForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_tag = False
+        self.fields['packageversion'].label = _("Package version")
+
+    def clean_packageversion(self):
+        if ProductRelease.dependencies.through.objects.filter(
+            productrelease=self.release,
+            packageversion=self.cleaned_data['packageversion']
+        ).exists():
+            raise forms.ValidationError(
+                _("This dependency already exists")
+            )
+        if ProductRelease.dependencies.through.objects.filter(
+            productrelease=self.release,
+            packageversion__package=self.cleaned_data['packageversion'].package
+        ).exists():
+            raise forms.ValidationError(
+                _("A dependency already exists for this package")
+            )
+        return self.cleaned_data['packageversion']
+
+    class Meta:
+        model = ProductRelease.dependencies.through
+        fields = (
+            'packageversion',
+        )
+
+
 class BuildForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
