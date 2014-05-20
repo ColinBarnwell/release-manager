@@ -8,6 +8,7 @@ from views import (
     ProductDetailView,
     ReleaseCreateView,
     ReleaseDetailView,
+    ReleaseUpdateView,
     ReleaseDeleteView,
     BuildDetailView,
     PackageDetailView,
@@ -34,6 +35,7 @@ urlpatterns = [
     url(r'^product/(?P<product_pk>[-\d]+)/add_release$', ReleaseCreateView.as_view(), name='release_create'),
 
     url(r'^release/(?P<pk>[-\d]+)$', ReleaseDetailView.as_view(), name='release_detail'),
+    url(r'^release/(?P<pk>[-\d]+)/update$', ReleaseUpdateView.as_view(), name='release_update'),
     url(r'^release/(?P<pk>[-\d]+)/delete$', ReleaseDeleteView.as_view(), name='release_delete'),
 
     url(r'^build/(?P<pk>[-\d]+)$', BuildDetailView.as_view(), name='build_detail'),

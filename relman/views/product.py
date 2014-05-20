@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
-from django.views.generic import DetailView, DeleteView, CreateView
+from django.views.generic import DetailView, DeleteView, CreateView, UpdateView
 
 from ..forms import ProductReleaseForm
 from ..models import Product, ProductRelease, Build
@@ -48,6 +48,16 @@ class ReleaseCreateView(CreateView):
     def get_success_url(self):
         messages.success(self.request, _("{object} has been created").format(object=self.object))
         return super(ReleaseCreateView, self).get_success_url()
+
+
+class ReleaseUpdateView(UpdateView):
+    model = ProductRelease
+    template_name = 'relman/includes/modals/update.html'
+    form_class = ProductReleaseForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been updated").format(object=self.object))
+        return super(ReleaseUpdateView, self).get_success_url()
 
 
 class ReleaseDetailView(DetailView):
