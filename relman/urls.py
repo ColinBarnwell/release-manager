@@ -14,9 +14,9 @@ from views import (
     ReleaseDeleteView,
     ReleaseCreateDependencyView,
     ReleaseDeleteDependencyView,
-    BuildCreateView,
-    BuildDetailView,
-    BuildUpdateView,
+    ReleaseBuildCreateView,
+    ReleaseBuildDetailView,
+    ReleaseBuildUpdateView,
     CheckCreateView,
     CheckUpdateView,
     PackageCreateView,
@@ -26,6 +26,8 @@ from views import (
     VersionDetailView,
     VersionUpdateView,
     VersionDeleteView,
+    VersionBuildCreateView,
+    VersionBuildUpdateView,
     CommentsView
 )
 
@@ -55,10 +57,10 @@ urlpatterns = [
     url(r'^release/(?P<pk>[-\d]+)/delete$', ReleaseDeleteView.as_view(), name='release_delete'),
     url(r'^release/(?P<release_pk>[-\d]+)/dependency/create$', ReleaseCreateDependencyView.as_view(), name='release_dependency_create'),
     url(r'^release/(?P<release_pk>[-\d]+)/dependency/(?P<version_pk>[-\d]+)/delete$', ReleaseDeleteDependencyView.as_view(), name='release_dependency_delete'),
-    url(r'^release/(?P<release_pk>[-\d]+)/add_build$', BuildCreateView.as_view(), name='build_create'),
+    url(r'^release/(?P<release_pk>[-\d]+)/add_build$', ReleaseBuildCreateView.as_view(), name='build_create'),
 
-    url(r'^build/(?P<pk>[-\d]+)$', BuildDetailView.as_view(), name='build_detail'),
-    url(r'^build/(?P<pk>[-\d]+)/update$', BuildUpdateView.as_view(), name='build_update'),
+    url(r'^build/(?P<pk>[-\d]+)$', ReleaseBuildDetailView.as_view(), name='build_detail'),
+    url(r'^build/(?P<pk>[-\d]+)/update$', ReleaseBuildUpdateView.as_view(), name='build_update'),
     url(r'^build/(?P<build_pk>[-\d]+)/add_check$', CheckCreateView.as_view(), name='check_create'),
 
     url(r'^check/(?P<pk>[-\d]+)/update$', CheckUpdateView.as_view(), name='check_update'),
@@ -71,6 +73,8 @@ urlpatterns = [
     url(r'^version/(?P<pk>[-\d]+)$', VersionDetailView.as_view(), name='version_detail'),
     url(r'^version/(?P<pk>[-\d]+)/update$', VersionUpdateView.as_view(), name='version_update'),
     url(r'^version/(?P<pk>[-\d]+)/delete$', VersionDeleteView.as_view(), name='version_delete'),
+    url(r'^version/(?P<version_pk>[-\d]+)/add_build$', VersionBuildCreateView.as_view(), name='versionbuild_create'),
+    url(r'^version-build/(?P<pk>[-\d]+)/update$', VersionBuildUpdateView.as_view(), name='versionbuild_update'),
     url(r'^comments/(?P<content_type>[-\d]+)/(?P<object_id>[-\d]+)$', CommentsView.as_view(), name='comments_list')
 ]
 

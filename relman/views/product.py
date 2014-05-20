@@ -9,7 +9,7 @@ from ..forms import (
     ProductReleaseCreateForm,
     ProductReleaseEditForm,
     ProductReleaseDependencyCreateForm,
-    BuildForm,
+    ReleaseBuildForm,
     CheckCreateForm,
     CheckUpdateForm
 )
@@ -166,16 +166,16 @@ class ReleaseDeleteDependencyView(DeleteView):
         return self.object.productrelease.get_absolute_url()
 
 
-class BuildDetailView(DetailView):
+class ReleaseBuildDetailView(DetailView):
     model = Build
     context_object_name = 'build'
     template_name = 'relman/includes/product__release__build.html'
 
 
-class BuildCreateView(CreateView):
+class ReleaseBuildCreateView(CreateView):
     model = Build
     template_name = 'relman/includes/modals/create.html'
-    form_class = BuildForm
+    form_class = ReleaseBuildForm
 
     def dispatch(self, request, *args, **kwargs):
         self.release = get_object_or_404(ProductRelease, pk=kwargs['release_pk'])
@@ -197,10 +197,10 @@ class BuildCreateView(CreateView):
         return super(BuildCreateView, self).get_success_url()
 
 
-class BuildUpdateView(UpdateView):
+class ReleaseBuildUpdateView(UpdateView):
     model = Build
     template_name = 'relman/includes/modals/update.html'
-    form_class = BuildForm
+    form_class = ReleaseBuildForm
 
     def get_success_url(self):
         messages.success(self.request, _("{object} has been updated").format(object=self.object))

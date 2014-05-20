@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
-from ..forms import PackageForm, PackageVersionCreateForm, PackageVersionEditForm
-from ..models import Package, PackageVersion
+from ..forms import PackageForm, PackageVersionCreateForm, PackageVersionEditForm, VersionBuildForm
+from ..models import Package, PackageVersion, PackageVersionBuild
 
 
 class PackageCreateView(CreateView):
@@ -89,3 +89,36 @@ class VersionDetailView(DetailView):
     model = PackageVersion
     context_object_name = 'version'
     template_name = 'relman/includes/package__version.html'
+
+
+class VersionBuildCreateView(CreateView):
+    model = PackageVersionBuild
+    template_name = 'relman/includes/modals/create.html'
+    form_class = VersionBuildForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.version = get_object_or_404(PackageVersion, pk=kwargs['version_pk'])
+        return super(VersionBuildCreateView, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self, **kwargs):
+        form_kwargs = super(VersionBuildCreateView, self).get_form_kwargs(**kwargs)
+        form_kwargs['version'] = self.version
+        return form_kwargs
+
+    def form_valid(self, form):
+        form.instance.version = self.version
+        return super(VersionBuildCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been created").format(object=self.object))
+        return self.version.get_absolute_url()
+
+
+class VersionBuildUpdateView(UpdateView):
+    model = PackageVersionBuild
+    template_name = 'relman/includes/modals/update.html'
+    form_class = VersionBuildForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been updated").format(object=self.object))
+        return super(VersionBuildUpdateView, self).get_success_url()

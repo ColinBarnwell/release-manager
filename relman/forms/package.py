@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Field, HTML
 
-from ..models import Package, PackageVersion
+from ..models import Package, PackageVersion, PackageVersionBuild
 
 
 class PackageForm(forms.ModelForm):
@@ -69,4 +69,30 @@ class PackageVersionEditForm(forms.ModelForm):
             'target_date',
             'status',
             'notes'
+        )
+
+
+class VersionBuildForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.version = kwargs.pop('version', None)
+        super(VersionBuildForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_tag = False
+
+    def clean_code(self):
+        if PackageVersionBuild.objects.filter(
+            version=self.version,
+            code=self.cleaned_data['code']
+        ).exists():
+            raise forms.ValidationError(
+                _("Version build with this code already exists.")
+            )
+        return self.cleaned_data['code']
+
+    class Meta:
+        model = PackageVersionBuild
+        fields = (
+            'code',
+            'status'
         )

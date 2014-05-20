@@ -125,12 +125,16 @@ class PackageVersionBuild(CommentsMixin):
     def is_rejected(self):
         return self.status == self.STATUS_CHOICES.rejected
 
+    def get_absolute_url(self):
+        self.version.get_absolute_url()
+
     def __unicode__(self):
         return u"%s.%s" % (self.version.version_number(), self.code)
 
     class Meta:
         app_label = 'relman'
         ordering = '-code',
+        unique_together = ('version', 'code')
 
 
 class Change(CommentsMixin):

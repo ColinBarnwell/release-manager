@@ -32,6 +32,7 @@
         <th>{% trans "Build" %}</th>
         <th>{% trans "Status" %}</th>
         <th></th>
+        <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'versionbuild_create' version_pk=version.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
         {% for build in version.builds.all %}
             <tr>
                 <td>{{ build }}</td>
@@ -54,6 +55,9 @@
                         <span class="glyphicon glyphicon-comment"></span>
                         {{ build.comments.count }}
                     </a>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-xs pull-right"  data-modal-url="{% url 'versionbuild_update' pk=build.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
                 </td>
             </tr>
         {% endfor %}

@@ -4,7 +4,7 @@ from product import (
     ProductReleaseCreateForm,
     ProductReleaseEditForm,
     ProductReleaseDependencyCreateForm,
-    BuildForm,
+    ReleaseBuildForm,
     CheckCreateForm,
     CheckUpdateForm
 )
@@ -12,4 +12,5 @@ from package import (
     PackageForm,
     PackageVersionCreateForm,
     PackageVersionEditForm,
+    VersionBuildForm
 )

@@ -109,10 +109,10 @@ class ProductReleaseDependencyCreateForm(forms.ModelForm):
         )
 
 
-class BuildForm(forms.ModelForm):
+class ReleaseBuildForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(BuildForm, self).__init__(*args, **kwargs)
+        super(ReleaseBuildForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_tag = False
 

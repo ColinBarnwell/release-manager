@@ -8,10 +8,10 @@ from product import (
     ReleaseDeleteView,
     ReleaseCreateDependencyView,
     ReleaseDeleteDependencyView,
-    BuildDetailView,
+    ReleaseBuildDetailView,
     ReleaseCreateView,
-    BuildCreateView,
-    BuildUpdateView,
+    ReleaseBuildCreateView,
+    ReleaseBuildUpdateView,
     CheckCreateView,
     CheckUpdateView
 )
@@ -22,6 +22,8 @@ from package import (
     VersionCreateView,
     VersionDetailView,
     VersionUpdateView,
-    VersionDeleteView
+    VersionDeleteView,
+    VersionBuildCreateView,
+    VersionBuildUpdateView
 )
 from comment import CommentsView
