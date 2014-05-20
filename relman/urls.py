@@ -5,12 +5,18 @@ from django.views.generic import TemplateView
 
 from views import (
     IndexView,
+    ProductCreateView,
     ProductDetailView,
+    ProductUpdateView,
     ReleaseCreateView,
     ReleaseDetailView,
     ReleaseUpdateView,
     ReleaseDeleteView,
+    BuildCreateView,
     BuildDetailView,
+    BuildUpdateView,
+    CheckCreateView,
+    CheckUpdateView,
     PackageDetailView,
     VersionDetailView,
     CommentsView
@@ -31,14 +37,23 @@ urlpatterns = [
 
     # Release Manager
     url(r'^$', IndexView.as_view(), name='index'),
+
+    url(r'^add_product$', ProductCreateView.as_view(), name='product_create'),
     url(r'^product/(?P<pk>[-\d]+)$', ProductDetailView.as_view(), name='product_detail'),
+    url(r'^product/(?P<pk>[-\d]+)/update$', ProductUpdateView.as_view(), name='product_update'),
     url(r'^product/(?P<product_pk>[-\d]+)/add_release$', ReleaseCreateView.as_view(), name='release_create'),
 
     url(r'^release/(?P<pk>[-\d]+)$', ReleaseDetailView.as_view(), name='release_detail'),
     url(r'^release/(?P<pk>[-\d]+)/update$', ReleaseUpdateView.as_view(), name='release_update'),
     url(r'^release/(?P<pk>[-\d]+)/delete$', ReleaseDeleteView.as_view(), name='release_delete'),
+    url(r'^release/(?P<release_pk>[-\d]+)/add_build$', BuildCreateView.as_view(), name='build_create'),
 
     url(r'^build/(?P<pk>[-\d]+)$', BuildDetailView.as_view(), name='build_detail'),
+    url(r'^build/(?P<pk>[-\d]+)/update$', BuildUpdateView.as_view(), name='build_update'),
+    url(r'^build/(?P<build_pk>[-\d]+)/add_check$', CheckCreateView.as_view(), name='check_create'),
+
+    url(r'^check/(?P<pk>[-\d]+)/update$', CheckUpdateView.as_view(), name='check_update'),
+
     url(r'^package/(?P<pk>[-\d]+)$', PackageDetailView.as_view(), name='package_detail'),
     url(r'^version/(?P<pk>[-\d]+)$', VersionDetailView.as_view(), name='version_detail'),
     url(r'^comments/(?P<content_type>[-\d]+)/(?P<object_id>[-\d]+)$', CommentsView.as_view(), name='comments_list')

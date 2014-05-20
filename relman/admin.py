@@ -10,8 +10,8 @@ from models import (
     PackageVersion,
     PackageVersionBuild,
     Change,
-    Environment,
-    Promotion
+    Checkpoint,
+    Check
 )
 
 
@@ -29,8 +29,8 @@ class PackageVersionBuildInline(admin.TabularInline):
     extra = 1
 
 
-class PromotionInline(admin.TabularInline):
-    model = Promotion
+class CheckInline(admin.TabularInline):
+    model = Check
     extra = 1
 
 
@@ -53,7 +53,7 @@ class ProductReleaseAdmin(admin.ModelAdmin):
 
 
 class BuildAdmin(admin.ModelAdmin):
-    inlines = PromotionInline,
+    inlines = CheckInline,
 
 
 class PackageAdmin(admin.ModelAdmin):
@@ -70,4 +70,4 @@ admin.site.register(ProductRelease, ProductReleaseAdmin)
 admin.site.register(Build, BuildAdmin)
 admin.site.register(Package, PackageAdmin)
 admin.site.register(PackageVersion, PackageVersionAdmin)
-admin.site.register(Environment)
+admin.site.register(Checkpoint)

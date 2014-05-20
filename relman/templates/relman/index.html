@@ -11,6 +11,7 @@
                     <th>{% trans "Product" %}</th>
                     <th>{% trans "Current release" %}</th>
                     <th>{% trans "Next release" %}</th>
+                    <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'product_create' %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
                 </tr>
                 {% for product in products %}
                     {% with current_release=product.current_release next_release=product.next_release %}
@@ -27,6 +28,9 @@
                                     {{ next_release.version_number }}
                                     ({{ next_release.target_date }})
                                 {% endif %}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-xs pull-right"  data-modal-url="{% url 'product_update' pk=product.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
                             </td>
                         </tr>
                     {% endwith %}

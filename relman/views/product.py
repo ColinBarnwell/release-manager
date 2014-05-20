@@ -1,10 +1,28 @@
 from django.contrib import messages
+from django.db.models import Max
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 from django.views.generic import DetailView, DeleteView, CreateView, UpdateView
 
-from ..forms import ProductReleaseForm
-from ..models import Product, ProductRelease, Build
+from ..forms import (
+    ProductForm,
+    ProductReleaseCreateForm,
+    ProductReleaseEditForm,
+    BuildForm,
+    CheckCreateForm,
+    CheckUpdateForm
+)
+from ..models import Product, ProductRelease, Build, Check
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    template_name = 'relman/includes/modals/create.html'
+    form_class = ProductForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been created").format(object=self.object))
+        return super(ProductCreateView, self).get_success_url()
 
 
 class ProductDetailView(DetailView):
@@ -13,7 +31,8 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context_data = super(ProductDetailView, self).get_context_data(**kwargs)
-        context_data['new_release_form'] = ProductReleaseForm(self.request.POST or None)
+        release = None
+        build = None
         if 'v' in self.request.GET:
             try:
                 major, minor, patch = self.request.GET['v'].split('.')
@@ -25,26 +44,35 @@ class ProductDetailView(DetailView):
                 )
                 context_data['release'] = release
             except ValueError, ProductRelease.DoesNotExist:
-                release = None
-        if 'b' in self.request.GET:
+                pass
+        if release is not None and 'b' in self.request.GET:
             try:
-                build = Build.objects.get(
-                    pk=self.request.GET['b'],
-                    release=release,
+                build = release.builds.get(
+                    build_number=self.request.GET['b'],
                 )
                 context_data['build'] = build
             except Build.DoesNotExist:
-                build = None
+                pass
         return context_data
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
 
 
+class ProductUpdateView(UpdateView):
+    model = Product
+    template_name = 'relman/includes/modals/update.html'
+    form_class = ProductForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been updated").format(object=self.object))
+        return '/'
+
+
 class ReleaseCreateView(CreateView):
     model = ProductRelease
     template_name = 'relman/includes/modals/create.html'
-    form_class = ProductReleaseForm
+    form_class = ProductReleaseCreateForm
 
     def dispatch(self, request, *args, **kwargs):
         self.product = get_object_or_404(Product, pk=kwargs['product_pk'])
@@ -62,7 +90,7 @@ class ReleaseCreateView(CreateView):
 class ReleaseUpdateView(UpdateView):
     model = ProductRelease
     template_name = 'relman/includes/modals/update.html'
-    form_class = ProductReleaseForm
+    form_class = ProductReleaseEditForm
 
     def get_success_url(self):
         messages.success(self.request, _("{object} has been updated").format(object=self.object))
@@ -88,3 +116,71 @@ class BuildDetailView(DetailView):
     model = Build
     context_object_name = 'build'
     template_name = 'relman/includes/product__release__build.html'
+
+
+class BuildCreateView(CreateView):
+    model = Build
+    template_name = 'relman/includes/modals/create.html'
+    form_class = BuildForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.release = get_object_or_404(ProductRelease, pk=kwargs['release_pk'])
+        return super(BuildCreateView, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.release = self.release
+        current_build_number = self.release.builds.aggregate(
+            Max('build_number')
+        )['build_number__max']
+        if current_build_number is None:
+            form.instance.build_number = 1
+        else:
+            form.instance.build_number = 1 + current_build_number
+        return super(BuildCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been created").format(object=self.object))
+        return super(BuildCreateView, self).get_success_url()
+
+
+class BuildUpdateView(UpdateView):
+    model = Build
+    template_name = 'relman/includes/modals/update.html'
+    form_class = BuildForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been updated").format(object=self.object))
+        return super(BuildUpdateView, self).get_success_url()
+
+
+class CheckCreateView(CreateView):
+    model = Check
+    template_name = 'relman/includes/modals/create.html'
+    form_class = CheckCreateForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.build = get_object_or_404(Build, pk=kwargs['build_pk'])
+        return super(CheckCreateView, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self, **kwargs):
+        form_kwargs = super(CheckCreateView, self).get_form_kwargs(**kwargs)
+        form_kwargs['build'] = self.build
+        return form_kwargs
+
+    def form_valid(self, form):
+        form.instance.build = self.build
+        return super(CheckCreateView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been created").format(object=self.object))
+        return super(CheckCreateView, self).get_success_url()
+
+
+class CheckUpdateView(UpdateView):
+    model = Check
+    template_name = 'relman/includes/modals/update.html'
+    form_class = CheckUpdateForm
+
+    def get_success_url(self):
+        messages.success(self.request, _("{object} has been updated").format(object=self.object))
+        return super(CheckUpdateView, self).get_success_url()

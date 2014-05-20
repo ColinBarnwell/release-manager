@@ -165,7 +165,7 @@ class Build(CommentsMixin):
         return self.code_name or self.build_number
 
     def get_absolute_url(self):
-        return u"%s&b=%s" % (self.release.get_absolute_url(), self.pk)
+        return u"%s&b=%s" % (self.release.get_absolute_url(), self.build_number)
 
     def get_ajax_url(self):
         return reverse('build_detail', kwargs={'pk': self.pk})

@@ -1,4 +1,4 @@
-from environment import *
+from checkpoint import *
 from package import *
 from product import *
 from comment import *
@@ -10,7 +10,7 @@ __all__ = [
     'Package',
     'PackageVersion',
     'Change',
-    'Environment',
-    'Promotion',
+    'Checkpoint',
+    'Check',
     'Comment'
 ]

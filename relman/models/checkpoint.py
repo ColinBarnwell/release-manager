@@ -4,12 +4,11 @@ from django.utils.translation import ugettext_lazy as _, pgettext_lazy as _p
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
 
+from mixins import CommentsMixin
 
-class Environment(models.Model):
+
+class Checkpoint(models.Model):
     """
-    An environment is a place where a build happens. If a build is successful
-    in one environment, it is promoted to the next environment. If there is
-    no next environment, then the build is successful.
     """
     name = models.CharField(
         _p("object name", "Name"),
@@ -25,9 +24,8 @@ class Environment(models.Model):
         ordering = ('display_order', 'name')
 
 
-class Promotion(TimeStampedModel):
+class Check(CommentsMixin, TimeStampedModel):
     """
-    A promotion is a build within a an environment.
     """
     STATUS_CHOICES = Choices(
         ('awaiting', _("Awaiting")),
@@ -38,12 +36,12 @@ class Promotion(TimeStampedModel):
     build = models.ForeignKey(
         'relman.Build',
         verbose_name=(_("Build")),
-        related_name='promotions',
+        related_name='checks',
         editable=False
     )
-    environment = models.ForeignKey(
-        'Environment',
-        verbose_name=(_("Environment")),
+    checkpoint = models.ForeignKey(
+        'Checkpoint',
+        verbose_name=(_("Checkpoint")),
     )
 
     status = models.CharField(
@@ -53,8 +51,6 @@ class Promotion(TimeStampedModel):
         default=STATUS_CHOICES.awaiting
     )
 
-    notes = models.TextField(_("Notes"), blank=True)
-
     @property
     def is_successful(self):
         return self.status == self.STATUS_CHOICES.success
@@ -63,8 +59,12 @@ class Promotion(TimeStampedModel):
     def is_unsuccessful(self):
         return self.status == self.STATUS_CHOICES.failure
 
+    def get_absolute_url(self):
+        return self.build.get_absolute_url()
+
     def __unicode__(self):
-        return u'%s [%s]' % (self.build, self.environment)
+        return u'%s [%s]' % (self.build, self.checkpoint)
 
     class Meta:
         app_label = 'relman'
+        unique_together = ('build', 'checkpoint'),

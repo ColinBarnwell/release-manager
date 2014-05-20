@@ -39,8 +39,9 @@
         <th>{% trans "Build Number" %}</th>
         <th>{% trans "Status" %}</th>
         <th></th>
+        <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'build_create' release_pk=release.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
         {% for release_build in release.builds.all %}
-            <tr data-ajax-url="{{ release_build.get_ajax_url }}" data-ajax-target="#build-details" data-ajax-param="v={{ release.version_number }}&b={{ release_build.pk }}" {% if release_build = build %}class="warning"{% endif %}>
+            <tr data-ajax-url="{{ release_build.get_ajax_url }}" data-ajax-target="#build-details" data-ajax-param="v={{ release.version_number }}&b={{ release_build.build_number }}" {% if release_build = build %}class="warning"{% endif %}>
                 <td>{{ release.version_number }}.{{ release_build.code }}</td>
                 <td>
                     <span class="label
@@ -61,6 +62,9 @@
                         <span class="glyphicon glyphicon-comment"></span>
                         {{ release_build.comments.count }}
                     </a>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-xs pull-right"  data-modal-url="{% url 'build_update' pk=release_build.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
                 </td>
             </tr>
         {% endfor %}
