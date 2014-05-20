@@ -39,27 +39,27 @@
         <th>{% trans "Build Number" %}</th>
         <th>{% trans "Status" %}</th>
         <th></th>
-        {% for build in release.builds.all %}
-            <tr data-ajax-url="{{ build.get_ajax_url }}" data-ajax-target="#build-details">
-                <td>{{ release.version_number }}.{{ build.code }}</td>
+        {% for release_build in release.builds.all %}
+            <tr data-ajax-url="{{ release_build.get_ajax_url }}" data-ajax-target="#build-details" data-ajax-param="v={{ release.version_number }}&b={{ release_build.pk }}" {% if release_build = build %}class="warning"{% endif %}>
+                <td>{{ release.version_number }}.{{ release_build.code }}</td>
                 <td>
                     <span class="label
-                        {% if build.is_in_progress %}
+                        {% if release_build.is_in_progress %}
                             label-warning
-                        {% elif build.is_successful %}
+                        {% elif release_build.is_successful %}
                             label-success
-                        {% elif build.is_unsuccessful %}
+                        {% elif release_build.is_unsuccessful %}
                             label-danger
                         {% else %}
                             label-info
                         {% endif %}">
-                        {{ build.get_status_display }}
+                        {{ release_build.get_status_display }}
                     </span>
                 </td>
                 <td>
-                    <a class="badge pull-right" data-modal-url="{{ build.get_comments_url }}">
+                    <a class="badge pull-right" data-modal-url="{{ release_build.get_comments_url }}">
                         <span class="glyphicon glyphicon-comment"></span>
-                        {{ build.comments.count }}
+                        {{ release_build.comments.count }}
                     </a>
                 </td>
             </tr>
@@ -68,5 +68,8 @@
 </div>
 
 <div class="col-xs-4" id="build-details">
+    {% if build %}
+        {% include 'relman/includes/product__release__build.html' %}
+    {% endif %}
 </div>
 

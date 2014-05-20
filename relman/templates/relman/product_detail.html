@@ -43,8 +43,10 @@
                                 </a>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger btn-xs pull-right" data-modal-url="{% url 'release_delete' pk=product_release.pk %}"><span class="glyphicon glyphicon-minus-sign"></span></button>
-                                <button type="button" class="btn btn-primary btn-xs pull-right"  data-modal-url="{% url 'release_update' pk=product_release.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
+                                <span class="pull-right">
+                                    <button type="button" class="btn btn-primary btn-xs"  data-modal-url="{% url 'release_update' pk=product_release.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
+                                    <button type="button" class="btn btn-danger btn-xs" data-modal-url="{% url 'release_delete' pk=product_release.pk %}"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                                </span>
                             </td>
                         </tr>
                     {% endfor %}

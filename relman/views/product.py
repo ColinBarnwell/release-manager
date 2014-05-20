@@ -25,7 +25,16 @@ class ProductDetailView(DetailView):
                 )
                 context_data['release'] = release
             except ValueError, ProductRelease.DoesNotExist:
-                pass
+                release = None
+        if 'b' in self.request.GET:
+            try:
+                build = Build.objects.get(
+                    pk=self.request.GET['b'],
+                    release=release,
+                )
+                context_data['build'] = build
+            except Build.DoesNotExist:
+                build = None
         return context_data
 
     def post(self, request, *args, **kwargs):
