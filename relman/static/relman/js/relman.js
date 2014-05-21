@@ -4,9 +4,15 @@ function ajax_load(url, target_id, callback) {
         url: url,
         cache: false,
         success: function(response) {
-            $(target_id).html(response);
-            if (callback !== undefined) {
-                callback();
+            if (response.indexOf('<!DOCTYPE html>') > 0) {
+                document.open('text/html', 'replace');
+                document.write(response);
+                document.close();
+            } else {
+                $(target_id).html(response);
+                if (callback !== undefined) {
+                    callback();
+                }
             }
         }
     });

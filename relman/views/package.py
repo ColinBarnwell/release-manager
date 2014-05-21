@@ -6,14 +6,16 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from ..forms import PackageForm, PackageVersionCreateForm, PackageVersionEditForm, VersionBuildForm, VersionChangeForm
 from ..models import Package, PackageVersion, PackageVersionBuild, Change
 
+from mixins import RequireAuthenticatedUser
 
-class PackageCreateView(CreateView):
+
+class PackageCreateView(RequireAuthenticatedUser, CreateView):
     model = Package
     template_name = 'relman/includes/modals/create.html'
     form_class = PackageForm
 
 
-class PackageDetailView(DetailView):
+class PackageDetailView(RequireAuthenticatedUser, DetailView):
     model = Package
     context_object_name = 'package'
 
@@ -34,14 +36,14 @@ class PackageDetailView(DetailView):
         return data
 
 
-class PackageUpdateView(UpdateView):
+class PackageUpdateView(RequireAuthenticatedUser, UpdateView):
     model = Package
     template_name = 'relman/includes/modals/update.html'
     form_class = PackageForm
     success_url = '/'
 
 
-class VersionCreateView(CreateView):
+class VersionCreateView(RequireAuthenticatedUser, CreateView):
     model = PackageVersion
     template_name = 'relman/includes/modals/create.html'
     form_class = PackageVersionCreateForm
@@ -55,13 +57,13 @@ class VersionCreateView(CreateView):
         return super(VersionCreateView, self).form_valid(form)
 
 
-class VersionUpdateView(UpdateView):
+class VersionUpdateView(RequireAuthenticatedUser, UpdateView):
     model = PackageVersion
     template_name = 'relman/includes/modals/update.html'
     form_class = PackageVersionEditForm
 
 
-class VersionDeleteView(DeleteView):
+class VersionDeleteView(RequireAuthenticatedUser, DeleteView):
     model = PackageVersion
     template_name = 'relman/includes/modals/delete.html'
 
@@ -70,13 +72,13 @@ class VersionDeleteView(DeleteView):
         return self.object.package.get_absolute_url()
 
 
-class VersionDetailView(DetailView):
+class VersionDetailView(RequireAuthenticatedUser, DetailView):
     model = PackageVersion
     context_object_name = 'version'
     template_name = 'relman/includes/package__version.html'
 
 
-class VersionBuildCreateView(CreateView):
+class VersionBuildCreateView(RequireAuthenticatedUser, CreateView):
     model = PackageVersionBuild
     template_name = 'relman/includes/modals/create.html'
     form_class = VersionBuildForm
@@ -95,13 +97,13 @@ class VersionBuildCreateView(CreateView):
         return super(VersionBuildCreateView, self).form_valid(form)
 
 
-class VersionBuildUpdateView(UpdateView):
+class VersionBuildUpdateView(RequireAuthenticatedUser, UpdateView):
     model = PackageVersionBuild
     template_name = 'relman/includes/modals/update.html'
     form_class = VersionBuildForm
 
 
-class VersionChangeCreateView(CreateView):
+class VersionChangeCreateView(RequireAuthenticatedUser, CreateView):
     model = Change
     template_name = 'relman/includes/modals/create.html'
     form_class = VersionChangeForm
@@ -120,13 +122,13 @@ class VersionChangeCreateView(CreateView):
         return super(VersionChangeCreateView, self).form_valid(form)
 
 
-class VersionChangeUpdateView(UpdateView):
+class VersionChangeUpdateView(RequireAuthenticatedUser, UpdateView):
     model = Change
     template_name = 'relman/includes/modals/update.html'
     form_class = VersionChangeForm
 
 
-class VersionChangeDeleteView(DeleteView):
+class VersionChangeDeleteView(RequireAuthenticatedUser, DeleteView):
     model = Change
     template_name = 'relman/includes/modals/delete.html'
 

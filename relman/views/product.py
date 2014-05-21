@@ -15,14 +15,16 @@ from ..forms import (
 )
 from ..models import Product, ProductRelease, Build, Check
 
+from mixins import RequireAuthenticatedUser
 
-class ProductCreateView(CreateView):
+
+class ProductCreateView(RequireAuthenticatedUser, CreateView):
     model = Product
     template_name = 'relman/includes/modals/create.html'
     form_class = ProductForm
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(RequireAuthenticatedUser, DetailView):
     model = Product
     context_object_name = 'product'
 
@@ -53,14 +55,14 @@ class ProductDetailView(DetailView):
         return context_data
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(RequireAuthenticatedUser, UpdateView):
     model = Product
     template_name = 'relman/includes/modals/update.html'
     form_class = ProductForm
     success_url = '/'
 
 
-class ReleaseCreateView(CreateView):
+class ReleaseCreateView(RequireAuthenticatedUser, CreateView):
     model = ProductRelease
     template_name = 'relman/includes/modals/create.html'
     form_class = ProductReleaseCreateForm
@@ -78,19 +80,19 @@ class ReleaseCreateView(CreateView):
         return response
 
 
-class ReleaseUpdateView(UpdateView):
+class ReleaseUpdateView(RequireAuthenticatedUser, UpdateView):
     model = ProductRelease
     template_name = 'relman/includes/modals/update.html'
     form_class = ProductReleaseEditForm
 
 
-class ReleaseDetailView(DetailView):
+class ReleaseDetailView(RequireAuthenticatedUser, DetailView):
     model = ProductRelease
     context_object_name = 'release'
     template_name = 'relman/includes/product__release.html'
 
 
-class ReleaseDeleteView(DeleteView):
+class ReleaseDeleteView(RequireAuthenticatedUser, DeleteView):
     model = ProductRelease
     template_name = 'relman/includes/modals/delete.html'
 
@@ -99,7 +101,7 @@ class ReleaseDeleteView(DeleteView):
         return self.object.product.get_absolute_url()
 
 
-class ReleaseCreateDependencyView(CreateView):
+class ReleaseCreateDependencyView(RequireAuthenticatedUser, CreateView):
     model = ProductRelease.dependencies.through
     template_name = 'relman/includes/modals/create.html'
     form_class = ProductReleaseDependencyCreateForm
@@ -121,7 +123,7 @@ class ReleaseCreateDependencyView(CreateView):
         return self.object.productrelease.get_absolute_url()
 
 
-class ReleaseDeleteDependencyView(DeleteView):
+class ReleaseDeleteDependencyView(RequireAuthenticatedUser, DeleteView):
     model = ProductRelease.dependencies.through
     template_name = 'relman/includes/modals/delete.html'
 
@@ -146,13 +148,13 @@ class ReleaseDeleteDependencyView(DeleteView):
         return self.object.productrelease.get_absolute_url()
 
 
-class ReleaseBuildDetailView(DetailView):
+class ReleaseBuildDetailView(RequireAuthenticatedUser, DetailView):
     model = Build
     context_object_name = 'build'
     template_name = 'relman/includes/product__release__build.html'
 
 
-class ReleaseBuildCreateView(CreateView):
+class ReleaseBuildCreateView(RequireAuthenticatedUser, CreateView):
     model = Build
     template_name = 'relman/includes/modals/create.html'
     form_class = ReleaseBuildForm
@@ -173,7 +175,7 @@ class ReleaseBuildCreateView(CreateView):
         return super(ReleaseBuildCreateView, self).form_valid(form)
 
 
-class ReleaseBuildUpdateView(UpdateView):
+class ReleaseBuildUpdateView(RequireAuthenticatedUser, UpdateView):
     model = Build
     template_name = 'relman/includes/modals/update.html'
     form_class = ReleaseBuildForm
@@ -183,7 +185,7 @@ class ReleaseBuildUpdateView(UpdateView):
         return super(ReleaseBuildUpdateView, self).get_success_url()
 
 
-class CheckCreateView(CreateView):
+class CheckCreateView(RequireAuthenticatedUser, CreateView):
     model = Check
     template_name = 'relman/includes/modals/create.html'
     form_class = CheckCreateForm
@@ -202,7 +204,7 @@ class CheckCreateView(CreateView):
         return super(CheckCreateView, self).form_valid(form)
 
 
-class CheckUpdateView(UpdateView):
+class CheckUpdateView(RequireAuthenticatedUser, UpdateView):
     model = Check
     template_name = 'relman/includes/modals/update.html'
     form_class = CheckUpdateForm

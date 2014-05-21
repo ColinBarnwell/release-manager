@@ -9,7 +9,7 @@ admin.autodiscover()
 urlpatterns = [
 
     #Login
-    url(r'^login/', 'django.contrib.auth.views.login'),
+    url(r'^login/', 'django.contrib.auth.views.login', name='login'),
     url(r'^logout/', 'django.contrib.auth.views.logout_then_login', {'login_url': '/'}),
 
     # Admin

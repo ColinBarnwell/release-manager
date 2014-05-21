@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block nav %}
+    <form class="navbar-form navbar-left" action="{% url 'django.contrib.auth.views.login' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <div class="form-group">
+            <input class="form-control" type="text" name="username" maxlength="254" id="id_username" {% if form.username.value %}value="{{ form.username.value }}"{% endif %} placeholder="{% trans 'username' %}" />
+            <input class="form-control" type="password" name="password" id="id_password" placeholder="{% trans 'password' %}" />
+            <button type="submit" class="btn btn-default">{% trans "Log in" %}</button>
+        </div>
+    </form>
+    <div class="nav navbar-nav">
+        {% if form.errors %}
+            <h4 class="text-danger">{% trans "Invalid username and password combination" %}</h4>
+        {% endif %}
+    </div>
+{% endblock nav %}

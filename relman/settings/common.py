@@ -83,6 +83,8 @@ MESSAGE_TAGS = {
     messages.DEBUG: 'default',
     messages.ERROR: 'danger'
 }
+
+LOGIN_REDIRECT_URL = '/'
 ########## END GENERAL CONFIGURATION
 
 

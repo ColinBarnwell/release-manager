@@ -7,8 +7,10 @@ from django.views.generic import ListView, CreateView
 from ..forms import CommentForm
 from ..models import Comment
 
+from mixins import RequireAuthenticatedUser
 
-class CommentsView(ListView, CreateView):
+
+class CommentsView(RequireAuthenticatedUser, ListView, CreateView):
 
     model = Comment
     template_name = 'relman/includes/modals/comments.html'

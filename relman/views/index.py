@@ -2,8 +2,10 @@ from django.views.generic import TemplateView
 
 from ..models import Product, Package
 
+from mixins import RequireAuthenticatedUser
 
-class IndexView(TemplateView):
+
+class IndexView(RequireAuthenticatedUser, TemplateView):
 
     template_name = 'relman/index.html'
 
