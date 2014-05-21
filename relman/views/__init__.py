@@ -24,6 +24,9 @@ from package import (
     VersionUpdateView,
     VersionDeleteView,
     VersionBuildCreateView,
-    VersionBuildUpdateView
+    VersionBuildUpdateView,
+    VersionChangeCreateView,
+    VersionChangeUpdateView,
+    VersionChangeDeleteView
 )
 from comment import CommentsView

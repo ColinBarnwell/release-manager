@@ -12,5 +12,6 @@ from package import (
     PackageForm,
     PackageVersionCreateForm,
     PackageVersionEditForm,
-    VersionBuildForm
+    VersionBuildForm,
+    VersionChangeForm
 )

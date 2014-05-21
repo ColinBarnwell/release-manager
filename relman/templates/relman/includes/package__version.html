@@ -11,8 +11,11 @@
 
 <div class="col-xs-8">
     <table class="table table-striped">
-        <th>{% trans "Change log" %}</th>
-        <th></th>
+        <tr>
+            <th>{% trans "Change log" %}</th>
+            <th></th>
+            <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'change_create' version_pk=version.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
+        </tr>
         {% for change in version.changes.all %}
             <tr>
                 <td>{{ change.description }}</td>
@@ -21,6 +24,12 @@
                         <span class="glyphicon glyphicon-comment"></span>
                         {{ change.comments.count }}
                     </a>
+                </td>
+                <td>
+                    <span class="pull-right">
+                        <button type="button" class="btn btn-primary btn-xs"  data-modal-url="{% url 'change_update' pk=change.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
+                        <button type="button" class="btn btn-danger btn-xs" data-modal-url="{% url 'change_delete' pk=change.pk %}"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                    </span>
                 </td>
             </tr>
         {% endfor %}
@@ -64,7 +73,11 @@
     </table>
 </div>
 
-<div class="col-xs-8">
+<div class="col-xs-12">
+    <br />
+</div>
+
+<div class="col-xs-12">
     <table class="table table-striped">
         <th>{% trans "Dependant release" %}</th>
         <th>{% trans "Status" %}</th>

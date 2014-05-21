@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Field, HTML
 
-from ..models import Package, PackageVersion, PackageVersionBuild
+from ..models import Package, PackageVersion, PackageVersionBuild, Change
 
 
 class PackageForm(forms.ModelForm):
@@ -95,4 +95,19 @@ class VersionBuildForm(forms.ModelForm):
         fields = (
             'code',
             'status'
+        )
+
+
+class VersionChangeForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.version = kwargs.pop('version', None)
+        super(VersionChangeForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_tag = False
+
+    class Meta:
+        model = Change
+        fields = (
+            'description',
         )

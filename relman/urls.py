@@ -28,6 +28,9 @@ from views import (
     VersionDeleteView,
     VersionBuildCreateView,
     VersionBuildUpdateView,
+    VersionChangeCreateView,
+    VersionChangeUpdateView,
+    VersionChangeDeleteView,
     CommentsView
 )
 
@@ -75,12 +78,10 @@ urlpatterns = [
     url(r'^version/(?P<pk>[-\d]+)/delete$', VersionDeleteView.as_view(), name='version_delete'),
     url(r'^version/(?P<version_pk>[-\d]+)/add_build$', VersionBuildCreateView.as_view(), name='versionbuild_create'),
     url(r'^version-build/(?P<pk>[-\d]+)/update$', VersionBuildUpdateView.as_view(), name='versionbuild_update'),
-    url(r'^comments/(?P<content_type>[-\d]+)/(?P<object_id>[-\d]+)$', CommentsView.as_view(), name='comments_list')
-]
+    url(r'^version/(?P<version_pk>[-\d]+)/add_change$', VersionChangeCreateView.as_view(), name='change_create'),
+    url(r'^change/(?P<pk>[-\d]+)/update$', VersionChangeUpdateView.as_view(), name='change_update'),
+    url(r'^change/(?P<pk>[-\d]+)/delete$', VersionChangeDeleteView.as_view(), name='change_delete'),
 
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^403.html$', TemplateView.as_view(template_name='403.html')),
-        url(r'^404.html$', TemplateView.as_view(template_name='404.html')),
-        url(r'^500.html$', TemplateView.as_view(template_name='500.html')),
-    ]
+    url(r'^comments/(?P<content_type>[-\d]+)/(?P<object_id>[-\d]+)$', CommentsView.as_view(), name='comments_list')
+
+]

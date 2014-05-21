@@ -151,6 +151,9 @@ class Change(CommentsMixin):
         _("Description")
     )
 
+    def get_absolute_url(self):
+        return self.version.get_absolute_url()
+
     def __unicode__(self):
         return self.description
 
