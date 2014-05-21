@@ -1,110 +1,117 @@
 {% load i18n %}
 
-<div class="col-xs-12">
-    <h3>{{ version.version_number }}</h2>
+<div class="row">
+
+    <div class="col-xs-12">
+        <h3>{{ version.version_number }}</h2>
+    </div>
+
+    <div class="col-xs-4">
+        <h4>{% trans "Notes" %}</h4>
+        {{ version.notes|linebreaks }}
+    </div>
+
+    <div class="col-xs-8">
+        <table class="table table-striped">
+            <tr>
+                <th>{% trans "Change log" %}</th>
+                <th></th>
+                <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'change_create' version_pk=version.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
+            </tr>
+            {% for change in version.changes.all %}
+                <tr>
+                    <td>{{ change.description }}</td>
+                    <td>
+                        <a class="badge pull-right" data-modal-url="{{ change.get_comments_url }}">
+                            <span class="glyphicon glyphicon-comment"></span>
+                            {{ change.comments.count }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-primary btn-xs"  data-modal-url="{% url 'change_update' pk=change.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
+                            <button type="button" class="btn btn-danger btn-xs" data-modal-url="{% url 'change_delete' pk=change.pk %}"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
 </div>
 
-<div class="col-xs-4">
-    <h4>{% trans "Notes" %}</h4>
-    {{ version.notes|linebreaks }}
-</div>
+<div class="row">
 
-<div class="col-xs-8">
-    <table class="table table-striped">
-        <tr>
-            <th>{% trans "Change log" %}</th>
+    <div class="col-xs-4">
+        <table class="table table-striped">
+            <th>{% trans "Build" %}</th>
+            <th>{% trans "Status" %}</th>
             <th></th>
-            <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'change_create' version_pk=version.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
-        </tr>
-        {% for change in version.changes.all %}
-            <tr>
-                <td>{{ change.description }}</td>
-                <td>
-                    <a class="badge pull-right" data-modal-url="{{ change.get_comments_url }}">
-                        <span class="glyphicon glyphicon-comment"></span>
-                        {{ change.comments.count }}
-                    </a>
-                </td>
-                <td>
-                    <span class="pull-right">
-                        <button type="button" class="btn btn-primary btn-xs"  data-modal-url="{% url 'change_update' pk=change.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
-                        <button type="button" class="btn btn-danger btn-xs" data-modal-url="{% url 'change_delete' pk=change.pk %}"><span class="glyphicon glyphicon-minus-sign"></span></button>
-                    </span>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-</div>
+            <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'versionbuild_create' version_pk=version.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
+            {% for build in version.builds.all %}
+                <tr>
+                    <td>{{ build }}</td>
+                    <td>
+                        <span class="label
+                            {% if build.is_accepted %}
+                                label-success
+                            {% elif build.is_rejected %}
+                                label-danger
+                            {% elif build.is_provisional %}
+                                label-info
+                            {% else %}
+                                label-warning
+                            {% endif %}">
+                            {{ build.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <a class="badge pull-right" data-modal-url="{{ build.get_comments_url }}">
+                            <span class="glyphicon glyphicon-comment"></span>
+                            {{ build.comments.count }}
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-xs pull-right"  data-modal-url="{% url 'versionbuild_update' pk=build.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-<div class="col-xs-4">
-    <table class="table table-striped">
-        <th>{% trans "Build" %}</th>
-        <th>{% trans "Status" %}</th>
-        <th></th>
-        <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'versionbuild_create' version_pk=version.pk %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
-        {% for build in version.builds.all %}
-            <tr>
-                <td>{{ build }}</td>
-                <td>
-                    <span class="label
-                        {% if build.is_accepted %}
-                            label-success
-                        {% elif build.is_rejected %}
-                            label-danger
-                        {% elif build.is_provisional %}
-                            label-info
-                        {% else %}
-                            label-warning
-                        {% endif %}">
-                        {{ build.get_status_display }}
-                    </span>
-                </td>
-                <td>
-                    <a class="badge pull-right" data-modal-url="{{ build.get_comments_url }}">
-                        <span class="glyphicon glyphicon-comment"></span>
-                        {{ build.comments.count }}
-                    </a>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-xs pull-right"  data-modal-url="{% url 'versionbuild_update' pk=build.pk %}"><span class="glyphicon glyphicon-pencil"></span></button>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-</div>
 
-<div class="col-xs-12">
-    <br />
-</div>
+    <div class="col-xs-8">
+        <table class="table table-striped">
+            <th>{% trans "Dependant release" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Issues" %}</th>
+            {% for dependant in version.dependants.all %}
+                <tr>
+                    <td>{{ dependant }}</td>
+                    <td>
+                        <span class="label
+                            {% if dependant.is_obsolete %}
+                                label-default
+                            {% elif dependant.is_proposed %}
+                                label-warning
+                            {% elif dependant.is_in_progress %}
+                                label-info
+                            {% elif dependant.is_released %}
+                                label-success
+                            {% endif %}">
+                            {{ dependant.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
+                            {% if dependant.target_date < version.target_date %}
+                                <li class="text-danger">{% trans "Target release pre-dates version release." %}</li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-<div class="col-xs-12">
-    <table class="table table-striped">
-        <th>{% trans "Dependant release" %}</th>
-        <th>{% trans "Status" %}</th>
-        <th>{% trans "Issues" %}</th>
-        {% for dependant in version.dependants.all %}
-            <tr>
-                <td>{{ dependant }}</td>
-                <td>
-                    <span class="label
-                        {% if dependant.is_obsolete %}
-                            label-default
-                        {% elif dependant.is_proposed %}
-                            label-warning
-                        {% elif dependant.is_in_progress %}
-                            label-info
-                        {% elif dependant.is_released %}
-                            label-success
-                        {% endif %}">
-                        {{ dependant.get_status_display }}
-                    </span>
-                </td>
-                <td>
-                    <ul>
-                        {% if dependant.target_date < version.target_date %}<li>{% trans "Target release pre-dates version release" %}</li>{% endif %}
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
 </div>

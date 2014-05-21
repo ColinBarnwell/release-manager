@@ -9,9 +9,11 @@ from mixins import CommentsMixin
 
 class Checkpoint(models.Model):
     """
+    A checkpoint is an environment, test suite or other item in a QA check list
+    that a build can be checked against.
     """
     name = models.CharField(
-        _p("object name", "Name"),
+        _p(u"object name", u"Name"),
         max_length=255
     )
     display_order = models.PositiveIntegerField(_("Display order"), default=0)
@@ -26,6 +28,7 @@ class Checkpoint(models.Model):
 
 class Check(CommentsMixin, TimeStampedModel):
     """
+    A check represents the testing of a single build against a single checkpoint.
     """
     STATUS_CHOICES = Choices(
         ('awaiting', _("Awaiting")),

@@ -1,30 +1,6 @@
 from django.contrib import admin
-from django.contrib.contenttypes import generic
 
-from models import (
-    Product,
-    ProductRelease,
-    Build,
-    Package,
-    PackageVersion,
-    PackageVersionBuild,
-    Change,
-    Checkpoint,
-    Check
-)
-
-
-class PackageVersionBuildInline(admin.TabularInline):
-    model = PackageVersionBuild
-    extra = 1
-
-
-class ChangeInline(admin.StackedInline):
-    model = Change
-
-
-class PackageVersionAdmin(admin.ModelAdmin):
-    inlines = (ChangeInline, PackageVersionBuildInline)
+from models import Checkpoint
 
 
 class CheckpointAdmin(admin.ModelAdmin):
@@ -32,5 +8,4 @@ class CheckpointAdmin(admin.ModelAdmin):
     list_editable = 'display_order',
 
 
-admin.site.register(PackageVersion, PackageVersionAdmin)
 admin.site.register(Checkpoint, CheckpointAdmin)

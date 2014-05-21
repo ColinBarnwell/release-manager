@@ -40,7 +40,6 @@ $(function() {
 
     $('body').on('click', '[data-ajax-url]', function() {
         ajax_load($(this).attr('data-ajax-url'), $(this).attr('data-ajax-target'));
-
         if ($(this).attr('data-ajax-param')) {
             window.history.replaceState('', '', document.location.pathname + '?' + $(this).attr('data-ajax-param'));
         }

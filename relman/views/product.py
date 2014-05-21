@@ -21,10 +21,6 @@ class ProductCreateView(CreateView):
     template_name = 'relman/includes/modals/create.html'
     form_class = ProductForm
 
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been created").format(object=self.object))
-        return super(ProductCreateView, self).get_success_url()
-
 
 class ProductDetailView(DetailView):
     model = Product
@@ -56,18 +52,12 @@ class ProductDetailView(DetailView):
                 pass
         return context_data
 
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
-
 
 class ProductUpdateView(UpdateView):
     model = Product
     template_name = 'relman/includes/modals/update.html'
     form_class = ProductForm
-
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been updated").format(object=self.object))
-        return '/'
+    success_url = '/'
 
 
 class ReleaseCreateView(CreateView):
@@ -87,19 +77,11 @@ class ReleaseCreateView(CreateView):
             self.object.dependencies.add(*previous_versions[0].dependencies.all())
         return response
 
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been created").format(object=self.object))
-        return super(ReleaseCreateView, self).get_success_url()
-
 
 class ReleaseUpdateView(UpdateView):
     model = ProductRelease
     template_name = 'relman/includes/modals/update.html'
     form_class = ProductReleaseEditForm
-
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been updated").format(object=self.object))
-        return super(ReleaseUpdateView, self).get_success_url()
 
 
 class ReleaseDetailView(DetailView):
@@ -136,7 +118,6 @@ class ReleaseCreateDependencyView(CreateView):
         return super(ReleaseCreateDependencyView, self).form_valid(form)
 
     def get_success_url(self):
-        messages.success(self.request, _("{object} has been added as a dependency").format(object=self.object.packageversion))
         return self.object.productrelease.get_absolute_url()
 
 
@@ -162,7 +143,6 @@ class ReleaseDeleteDependencyView(DeleteView):
         return data
 
     def get_success_url(self):
-        messages.warning(self.request, _("Dependency for {version} has been removed.").format(version=self.object.packageversion))
         return self.object.productrelease.get_absolute_url()
 
 
@@ -179,7 +159,7 @@ class ReleaseBuildCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         self.release = get_object_or_404(ProductRelease, pk=kwargs['release_pk'])
-        return super(BuildCreateView, self).dispatch(request, *args, **kwargs)
+        return super(ReleaseBuildCreateView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.release = self.release
@@ -190,11 +170,7 @@ class ReleaseBuildCreateView(CreateView):
             form.instance.build_number = 1
         else:
             form.instance.build_number = 1 + current_build_number
-        return super(BuildCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been created").format(object=self.object))
-        return super(BuildCreateView, self).get_success_url()
+        return super(ReleaseBuildCreateView, self).form_valid(form)
 
 
 class ReleaseBuildUpdateView(UpdateView):
@@ -204,7 +180,7 @@ class ReleaseBuildUpdateView(UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, _("{object} has been updated").format(object=self.object))
-        return super(BuildUpdateView, self).get_success_url()
+        return super(ReleaseBuildUpdateView, self).get_success_url()
 
 
 class CheckCreateView(CreateView):
@@ -225,16 +201,8 @@ class CheckCreateView(CreateView):
         form.instance.build = self.build
         return super(CheckCreateView, self).form_valid(form)
 
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been created").format(object=self.object))
-        return super(CheckCreateView, self).get_success_url()
-
 
 class CheckUpdateView(UpdateView):
     model = Check
     template_name = 'relman/includes/modals/update.html'
     form_class = CheckUpdateForm
-
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been updated").format(object=self.object))
-        return super(CheckUpdateView, self).get_success_url()

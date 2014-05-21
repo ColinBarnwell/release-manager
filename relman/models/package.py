@@ -48,7 +48,7 @@ class Package(models.Model):
 
 class PackageVersion(CommentsMixin, SoftwareVersion):
     """
-    A version of a package.
+    A numbered version of a package.
     """
     package = models.ForeignKey(
         Package,
@@ -90,7 +90,7 @@ class PackageVersion(CommentsMixin, SoftwareVersion):
 
 class PackageVersionBuild(CommentsMixin):
     """
-    A package version build represents an iteration of the current release
+    A package version build represents an iteration of the current release.
     """
     STATUS_CHOICES = Choices(
         ('in_progress', _("In progress")),
@@ -139,7 +139,7 @@ class PackageVersionBuild(CommentsMixin):
 
 class Change(CommentsMixin):
     """
-    A change introduced by a new version.
+    The description of a single change introduced by a new version.
     """
     version = models.ForeignKey(
         PackageVersion,

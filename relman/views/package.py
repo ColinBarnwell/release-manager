@@ -12,10 +12,6 @@ class PackageCreateView(CreateView):
     template_name = 'relman/includes/modals/create.html'
     form_class = PackageForm
 
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been created").format(object=self.object))
-        return super(PackageCreateView, self).get_success_url()
-
 
 class PackageDetailView(DetailView):
     model = Package
@@ -42,10 +38,7 @@ class PackageUpdateView(UpdateView):
     model = Package
     template_name = 'relman/includes/modals/update.html'
     form_class = PackageForm
-
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been updated").format(object=self.object))
-        return '/'
+    success_url = '/'
 
 
 class VersionCreateView(CreateView):
@@ -61,19 +54,11 @@ class VersionCreateView(CreateView):
         form.instance.package = self.package
         return super(VersionCreateView, self).form_valid(form)
 
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been created").format(object=self.object))
-        return super(VersionCreateView, self).get_success_url()
-
 
 class VersionUpdateView(UpdateView):
     model = PackageVersion
     template_name = 'relman/includes/modals/update.html'
     form_class = PackageVersionEditForm
-
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been updated").format(object=self.object))
-        return super(VersionUpdateView, self).get_success_url()
 
 
 class VersionDeleteView(DeleteView):
@@ -109,19 +94,11 @@ class VersionBuildCreateView(CreateView):
         form.instance.version = self.version
         return super(VersionBuildCreateView, self).form_valid(form)
 
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been created").format(object=self.object))
-        return self.version.get_absolute_url()
-
 
 class VersionBuildUpdateView(UpdateView):
     model = PackageVersionBuild
     template_name = 'relman/includes/modals/update.html'
     form_class = VersionBuildForm
-
-    def get_success_url(self):
-        messages.success(self.request, _("{object} has been updated").format(object=self.object))
-        return super(VersionBuildUpdateView, self).get_success_url()
 
 
 class VersionChangeCreateView(CreateView):
@@ -142,19 +119,11 @@ class VersionChangeCreateView(CreateView):
         form.instance.version = self.version
         return super(VersionChangeCreateView, self).form_valid(form)
 
-    def get_success_url(self):
-        messages.success(self.request, _("Change has been added"))
-        return self.version.get_absolute_url()
-
 
 class VersionChangeUpdateView(UpdateView):
     model = Change
     template_name = 'relman/includes/modals/update.html'
     form_class = VersionChangeForm
-
-    def get_success_url(self):
-        messages.success(self.request, _("Change has been updated"))
-        return super(VersionChangeUpdateView, self).get_success_url()
 
 
 class VersionChangeDeleteView(DeleteView):
