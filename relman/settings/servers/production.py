@@ -1,4 +1,4 @@
-""" Server-specific settings for local development """
+""" Server-specific settings for deployment """
 
 
 ########## DEBUG CONFIGURATION
@@ -12,7 +12,7 @@ TEMPLATE_DEBUG = DEBUG
 ########## ADMIN CONFIGURATION
 
 ADMINS = (
-    ('Colin Barnwell', 'cbarnwell@twig-world.com'),
+    # Add an admin
 )
 
 MANAGERS = ADMINS
@@ -22,7 +22,7 @@ MANAGERS = ADMINS
 
 ########## SECRET CONFIGURATION
 
-SECRET_KEY = 'f4)4(p_idl#!x6rlvxyg@_h+p2_5k&t#f)a=o^i5gxkns&@dk='
+SECRET_KEY = 'GENERATE_A_SECRET_KEY'
 
 ########## END SECRET CONFIGURATION
 
