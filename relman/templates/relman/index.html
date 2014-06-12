@@ -47,7 +47,7 @@
                     <th><button class="btn btn-success btn-xs pull-right" type="button" data-modal-url="{% url 'package_create' %}"><span class="glyphicon glyphicon-plus-sign"></span></button></th>
                 </tr>
                 {% for package in packages %}
-                    {% with current_version=package.current_version next_version=product.next_version %}
+                    {% with current_version=package.current_version next_version=package.next_version %}
                         <tr>
                             <td><a href="{{ package.get_absolute_url }}">{{ package.name }}</a></td>
                             <td>
